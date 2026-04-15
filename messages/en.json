@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "about": "About",
+    "services": "Services",
+    "projects": "Projects",
+    "techStack": "Tech Stack",
+    "testimonials": "Testimonials",
+    "contact": "Contact",
+    "hireMe": "Hire Me"
+  },
+  "hero": {
+    "subtitle": "Software Engineer",
+    "greeting": "Hi, I'm",
+    "name": "Alex Carter",
+    "description": "I build exceptional digital experiences that live at the intersection of design and engineering. Let's create something remarkable.",
+    "viewWork": "View My Work",
+    "getInTouch": "Get In Touch"
+  },
+  "about": {
+    "label": "About Me",
+    "title1": "Passionate about crafting",
+    "title2": "digital excellence",
+    "p1": "With over 5 years of professional experience, I specialize in building high-performance web applications that delight users and drive business results.",
+    "p2": "I thrive in the full stack — from pixel-perfect frontends to scalable backend architectures. Every project is an opportunity to push boundaries and deliver something exceptional.",
+    "p3": "When I'm not coding, you'll find me contributing to open-source projects, writing technical articles, or mentoring aspiring developers.",
+    "yearsExp": "Years Exp.",
+    "projects": "Projects",
+    "happyClients": "Happy Clients"
+  },
+  "services": {
+    "label": "What I Do",
+    "title": "Services & Expertise",
+    "fullstack": "Full-Stack Web Development",
+    "fullstackDesc": "End-to-end web applications built with modern frameworks, optimized for performance and scalability.",
+    "mobile": "Mobile Apps",
+    "mobileDesc": "Cross-platform mobile applications with React Native, delivering native performance on iOS and Android.",
+    "api": "REST & GraphQL APIs",
+    "apiDesc": "Robust, well-documented APIs designed for reliability, security, and developer experience.",
+    "uiux": "UI/UX Consulting",
+    "uiuxDesc": "Design audits and user experience consulting to improve conversion rates and user satisfaction.",
+    "performance": "Performance Optimization",
+    "performanceDesc": "Speed audits and optimization — from bundle size reduction to database query tuning and caching strategies.",
+    "codeReview": "Code Review & Mentoring",
+    "codeReviewDesc": "Thorough code reviews and 1-on-1 mentoring to level up your team's engineering practices."
+  },
+  "projects": {
+    "label": "My Work",
+    "title": "Featured Projects",
+    "saas": "SaaS Dashboard",
+    "saasDesc": "A comprehensive analytics platform for SaaS metrics. Real-time data visualization, subscription tracking, and revenue forecasting with a clean, intuitive interface.",
+    "ecommerce": "E-Commerce Platform",
+    "ecommerceDesc": "A headless storefront built on Shopify API delivering blazing-fast performance with a 99 Lighthouse score. Custom checkout flow and real-time inventory sync.",
+    "chat": "Real-time Chat App",
+    "chatDesc": "A scalable messaging platform supporting 10k concurrent users with typing indicators, read receipts, and end-to-end encryption.",
+    "ai": "AI Content Generator",
+    "aiDesc": "An intelligent content platform that generates SEO-optimized blog posts, social media copy, and marketing materials using advanced AI models."
+  },
+  "techStack": {
+    "label": "Technologies",
+    "title": "Tech Stack",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "database": "Database",
+    "devops": "DevOps"
+  },
+  "testimonials": {
+    "label": "Testimonials",
+    "title": "What Clients Say",
+    "sarah": "Delivered our platform 2 weeks ahead of schedule with exceptional code quality. Alex's ability to translate complex requirements into elegant solutions is unmatched.",
+    "james": "Exceptional attention to detail and clean code. Alex didn't just build what we asked for — he identified and solved problems we didn't even know we had.",
+    "priya": "Alex turned a complex brief into a flawless product. Communication was always clear, deadlines were always met, and the end result exceeded our expectations."
+  },
+  "contact": {
+    "label": "Get In Touch",
+    "title": "Let's Work Together",
+    "description": "Have a project in mind? I'd love to hear about it. Send me a message and I'll get back to you within 24 hours.",
+    "email": "hello@alexcarter.dev",
+    "location": "San Francisco, CA",
+    "availability": "Available for freelance",
+    "namePlaceholder": "Your Name",
+    "emailPlaceholder": "Your Email",
+    "messagePlaceholder": "Your Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "sent": "Message Sent!",
+    "error": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "tagline": "Building digital experiences that matter.",
+    "rights": "All rights reserved."
+  }
+}
