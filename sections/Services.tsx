@@ -40,6 +40,11 @@ function ServiceCard({
   const springRotateY = useSpring(rotateY, { stiffness: 200, damping: 20 });
   const glowX = useTransform(x, [-150, 150], [30, 70]);
   const glowY = useTransform(y, [-150, 150], [30, 70]);
+  const glowBackground = useTransform(
+    [glowX, glowY],
+    ([gx, gy]: number[]) =>
+      `radial-gradient(circle at ${gx}% ${gy}%, rgba(124,58,237,0.15) 0%, transparent 60%)`
+  );
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -71,20 +76,17 @@ function ServiceCard({
       {/* Accent glow behind card on hover */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          background: useTransform(
-            [glowX, glowY],
-            ([gx, gy]) =>
-              `radial-gradient(circle at ${gx}% ${gy}%, rgba(124,58,237,0.15) 0%, transparent 60%)`
-          ),
-        }}
+        style={{ background: glowBackground }}
       />
 
       <div className="relative">
         <motion.div
           className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent group-hover:text-white"
           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          transition={{
+            scale: { type: "spring", stiffness: 400, damping: 15 },
+            rotate: { type: "tween", duration: 0.35, ease: "easeInOut" },
+          }}
         >
           <Icon size={24} />
         </motion.div>
@@ -106,11 +108,17 @@ export default function Services() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
       >
-        <motion.div variants={fadeUp} className="mb-12 text-center">
-          <h2 className="mb-2 text-sm font-medium uppercase tracking-widest text-accent">
+        <motion.div variants={fadeUp} className="relative mb-12 text-center">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute left-1/2 -translate-x-1/2 -top-6 text-[9rem] font-black leading-none text-foreground/[0.06]"
+          >
+            02
+          </span>
+          <h2 className="relative mb-2 text-sm font-medium uppercase tracking-widest text-accent">
             {t("label")}
           </h2>
-          <h3 className="text-3xl font-bold md:text-4xl">{t("title")}</h3>
+          <h3 className="relative text-3xl font-bold md:text-4xl">{t("title")}</h3>
         </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -10,11 +10,16 @@
   },
   "hero": {
     "subtitle": "Software Engineer",
+    "available": "Available for new projects",
     "greeting": "Hi, I'm",
-    "name": "Alex Carter",
+    "name": "Ahmed Yousif",
     "description": "I build exceptional digital experiences that live at the intersection of design and engineering. Let's create something remarkable.",
     "viewWork": "View My Work",
-    "getInTouch": "Get In Touch"
+    "getInTouch": "Get In Touch",
+    "role1": "Full-Stack Developer",
+    "role2": "UI/UX Engineer",
+    "role3": "Open Source Contributor",
+    "role4": "Problem Solver"
   },
   "about": {
     "label": "About Me",
@@ -66,16 +71,17 @@
   "testimonials": {
     "label": "Testimonials",
     "title": "What Clients Say",
-    "sarah": "Delivered our platform 2 weeks ahead of schedule with exceptional code quality. Alex's ability to translate complex requirements into elegant solutions is unmatched.",
-    "james": "Exceptional attention to detail and clean code. Alex didn't just build what we asked for — he identified and solved problems we didn't even know we had.",
-    "priya": "Alex turned a complex brief into a flawless product. Communication was always clear, deadlines were always met, and the end result exceeded our expectations."
+    "sarah": "Delivered our platform 2 weeks ahead of schedule with exceptional code quality. Ahmed's ability to translate complex requirements into elegant solutions is unmatched.",
+    "james": "Exceptional attention to detail and clean code. Ahmed didn't just build what we asked for — he identified and solved problems we didn't even know we had.",
+    "priya": "Ahmed turned a complex brief into a flawless product. Communication was always clear, deadlines were always met, and the end result exceeded our expectations."
   },
   "contact": {
     "label": "Get In Touch",
     "title": "Let's Work Together",
     "description": "Have a project in mind? I'd love to hear about it. Send me a message and I'll get back to you within 24 hours.",
-    "email": "hello@alexcarter.dev",
-    "location": "San Francisco, CA",
+    "email": "ahmedmax0909090909@gmail.com",
+    "whatsapp": "WhatsApp",
+    "location": "Sudan",
     "availability": "Available for freelance",
     "namePlaceholder": "Your Name",
     "emailPlaceholder": "Your Email",

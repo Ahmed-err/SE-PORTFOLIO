@@ -60,16 +60,32 @@ export default function TechStack() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
       >
-        <motion.div variants={fadeUp} className="mb-12 text-center">
-          <h2 className="mb-2 text-sm font-medium uppercase tracking-widest text-accent">
+        <motion.div variants={fadeUp} className="relative mb-12 text-center">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute left-1/2 -translate-x-1/2 -top-6 text-[9rem] font-black leading-none text-foreground/[0.06]"
+          >
+            04
+          </span>
+          <h2 className="relative mb-2 text-sm font-medium uppercase tracking-widest text-accent">
             {t("label")}
           </h2>
-          <h3 className="text-3xl font-bold md:text-4xl">{t("title")}</h3>
+          <h3 className="relative text-3xl font-bold md:text-4xl">{t("title")}</h3>
         </motion.div>
 
-        <motion.div variants={fadeUp} className="space-y-4">
-          <MarqueeRow skills={row1Skills} direction="left" />
-          <MarqueeRow skills={row2Skills} direction="right" />
+        <motion.div variants={fadeUp} className="space-y-6">
+          <div>
+            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-text-muted ltr:pl-2 rtl:pr-2">
+              {t("frontend")} &amp; {t("backend")}
+            </p>
+            <MarqueeRow skills={row1Skills} direction="left" />
+          </div>
+          <div>
+            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-text-muted ltr:pl-2 rtl:pr-2">
+              {t("database")} &amp; {t("devops")}
+            </p>
+            <MarqueeRow skills={row2Skills} direction="right" />
+          </div>
         </motion.div>
       </motion.div>
     </SectionWrapper>

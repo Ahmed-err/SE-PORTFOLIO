@@ -84,14 +84,16 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a
           href="#"
-          className="text-xl font-bold text-accent"
+          className="group flex items-center gap-2"
           data-cursor-hover
           onClick={(e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
-          AC
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-sm font-bold text-white shadow-[0_0_12px_rgba(124,58,237,0.4)] transition-shadow duration-300 group-hover:shadow-[0_0_22px_rgba(124,58,237,0.65)]">
+            AY
+          </span>
         </a>
 
         {/* Desktop links */}

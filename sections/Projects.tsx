@@ -61,13 +61,15 @@ function ProjectCard({
     >
       {/* Image area with zoom + overlay slide-up */}
       <div className="relative aspect-video overflow-hidden bg-background">
-        <div className="flex h-full items-center justify-center transition-transform duration-500 group-hover:scale-105">
-          <span className="text-2xl font-bold text-text-muted/30">
+        <div className="flex h-full items-center justify-center transition-transform duration-500 group-hover:scale-105 bg-gradient-to-br from-card to-background">
+          <div className="absolute inset-0 bg-dot-grid opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-accent-light/5" />
+          <span className="relative text-xl font-bold text-text-muted/40">
             {title}
           </span>
         </div>
         {/* Overlay slides up from bottom */}
-        <div className="absolute inset-0 flex items-center justify-center gap-4 bg-accent/90 translate-y-full transition-transform duration-400 ease-out group-hover:translate-y-0">
+        <div className="absolute inset-0 flex items-center justify-center gap-4 bg-accent/90 translate-y-full transition-transform duration-[400ms] ease-out group-hover:translate-y-0">
           <motion.a
             href="#"
             className="rounded-full bg-white p-3 text-accent"
@@ -120,11 +122,17 @@ export default function Projects() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
       >
-        <motion.div variants={fadeUp} className="mb-12 text-center">
-          <h2 className="mb-2 text-sm font-medium uppercase tracking-widest text-accent">
+        <motion.div variants={fadeUp} className="relative mb-12 text-center">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute left-1/2 -translate-x-1/2 -top-6 text-[9rem] font-black leading-none text-foreground/[0.06]"
+          >
+            03
+          </span>
+          <h2 className="relative mb-2 text-sm font-medium uppercase tracking-widest text-accent">
             {t("label")}
           </h2>
-          <h3 className="text-3xl font-bold md:text-4xl">{t("title")}</h3>
+          <h3 className="relative text-3xl font-bold md:text-4xl">{t("title")}</h3>
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2">

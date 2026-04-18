@@ -62,7 +62,10 @@ export default function About() {
       >
         {/* Image with rotating gradient border */}
         <motion.div variants={slideInLeft} className="relative">
-          <div className="relative aspect-square overflow-hidden rounded-2xl">
+          <div
+            className="relative aspect-square overflow-hidden rounded-2xl"
+            style={{ animation: "glow-pulse 3s ease-in-out infinite" }}
+          >
             {/* Rotating gradient border */}
             <div className="absolute -inset-[2px] rounded-2xl overflow-hidden">
               <div
@@ -70,17 +73,31 @@ export default function About() {
                 style={{ animation: "rotate-gradient 4s linear infinite" }}
               />
             </div>
-            <div className="relative h-full rounded-2xl bg-card flex items-center justify-center m-[2px]">
-              <span className="text-6xl font-bold text-accent/30">AC</span>
+            <div className="relative h-full rounded-2xl bg-card flex items-center justify-center m-[2px] overflow-hidden">
+              {/* Dot grid texture */}
+              <div className="absolute inset-0 bg-dot-grid opacity-30" />
+              {/* Gradient tint */}
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-transparent to-accent-light/10" />
+              {/* Initials */}
+              <span className="relative text-7xl font-bold bg-gradient-to-br from-accent to-accent-light bg-clip-text text-transparent select-none">
+                AY
+              </span>
             </div>
           </div>
         </motion.div>
 
         {/* Content */}
-        <motion.div variants={slideInRight}>
+        <motion.div variants={slideInRight} className="relative">
+          {/* Section number decoration */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute ltr:right-0 rtl:left-0 top-0 text-[9rem] font-black leading-none text-foreground/[0.06]"
+          >
+            01
+          </span>
           <motion.h2
             variants={fadeUp}
-            className="mb-2 text-sm font-medium uppercase tracking-widest text-accent"
+            className="relative mb-2 text-sm font-medium uppercase tracking-widest text-accent"
           >
             {t("label")}
           </motion.h2>

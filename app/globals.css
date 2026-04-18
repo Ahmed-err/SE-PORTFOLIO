@@ -117,6 +117,12 @@ html[dir="rtl"] body {
   animation: shimmer 0.6s ease-in-out;
 }
 
+/* Gradient text shimmer */
+@keyframes text-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 /* Gradient mesh animation for hero */
 @keyframes mesh-float {
   0%, 100% {
@@ -189,6 +195,32 @@ html[dir="rtl"] body {
 .floating-label-input:not(:placeholder-shown) ~ .floating-label {
   transform: translateY(-1.75rem) scale(0.85);
   color: var(--accent);
+}
+
+/* Dot grid background pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Subtle noise grain overlay via SVG filter */
+.grain-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Glow ring for avatar placeholder */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+  }
 }
 
 /* Reduced motion */
