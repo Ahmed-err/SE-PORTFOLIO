@@ -31,11 +31,11 @@ const WhatsAppIcon = () => (
 const MailIcon = () => <Mail size={18} />;
 
 const socialLinks: { icon: ComponentType; href: string; label: string }[] = [
-  { icon: GithubIcon, href: "#", label: "GitHub" },
-  { icon: LinkedinIcon, href: "#", label: "LinkedIn" },
-  { icon: XBrandIcon, href: "#", label: "Twitter / X" },
-  { icon: WhatsAppIcon, href: "https://wa.me/message/your-number", label: "WhatsApp" },
-  { icon: MailIcon, href: "mailto:ahmedmax0909090909@gmail.com", label: "Email" },
+  { icon: GithubIcon,   href: "https://github.com/Ahmed-err",          label: "GitHub"     },
+  { icon: LinkedinIcon, href: "#",                                       label: "LinkedIn"   },
+  { icon: XBrandIcon,   href: "#",                                       label: "Twitter / X"},
+  { icon: WhatsAppIcon, href: "https://wa.me/201507090565",              label: "WhatsApp"  },
+  { icon: MailIcon,     href: "mailto:ahmedmax0909090909@gmail.com",     label: "Email"     },
 ];
 
 export default function Footer() {

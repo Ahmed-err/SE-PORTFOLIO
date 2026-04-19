@@ -78,10 +78,10 @@ export default function Contact() {
   );
 
   const contactInfo = [
-    { icon: Mail, label: t("email"), hasPulse: false },
-    { icon: WhatsAppIcon, label: t("whatsapp"), hasPulse: false },
-    { icon: MapPin, label: t("location"), hasPulse: false },
-    { icon: Clock, label: t("availability"), hasPulse: true },
+    { icon: Mail,         label: t("email"),        href: "mailto:ahmedmax0909090909@gmail.com", hasPulse: false },
+    { icon: WhatsAppIcon, label: t("whatsapp"),      href: "https://wa.me/201507090565",          hasPulse: false },
+    { icon: MapPin,       label: t("location"),      href: null,                                  hasPulse: false },
+    { icon: Clock,        label: t("availability"),  href: null,                                  hasPulse: true  },
   ];
 
   const handleSubmit = async (e: FormEvent) => {
@@ -134,23 +134,41 @@ export default function Contact() {
             <p className="text-text-secondary">{t("description")}</p>
 
             <div className="space-y-4">
-              {contactInfo.map((item) => (
-                <div key={item.label} className="flex items-center gap-3">
-                  <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
-                    <item.icon size={18} />
-                    {item.hasPulse && (
-                      <span className="absolute -top-0.5 ltr:-right-0.5 rtl:-left-0.5 flex h-3 w-3">
-                        <span
-                          className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-                          style={{ animation: "pulse-dot 2s ease-in-out infinite" }}
-                        />
-                        <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500" />
-                      </span>
-                    )}
+              {contactInfo.map((item) => {
+                const inner = (
+                  <>
+                    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                      <item.icon size={18} />
+                      {item.hasPulse && (
+                        <span className="absolute -top-0.5 ltr:-right-0.5 rtl:-left-0.5 flex h-3 w-3">
+                          <span
+                            className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                            style={{ animation: "pulse-dot 2s ease-in-out infinite" }}
+                          />
+                          <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500" />
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-text-secondary">{item.label}</span>
+                  </>
+                );
+                return item.href ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 transition-colors hover:text-accent"
+                    data-cursor-hover
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <div key={item.label} className="flex items-center gap-3">
+                    {inner}
                   </div>
-                  <span className="text-text-secondary">{item.label}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
 
