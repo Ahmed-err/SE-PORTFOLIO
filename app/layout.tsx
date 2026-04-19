@@ -22,7 +22,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "Alex Carter | Software Engineer",
+  title: "Ahmed Yousif | Software Engineer",
   description:
     "Full-stack software engineer specializing in building exceptional digital experiences with React, Next.js, and modern web technologies.",
   keywords: [

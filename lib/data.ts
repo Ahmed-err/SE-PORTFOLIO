@@ -28,40 +28,40 @@ export interface SkillCategory {
 
 export const projects: Project[] = [
   {
-    title: "SaaS Dashboard",
+    title: "ElectroPro ERP",
     description:
-      "A comprehensive analytics platform for SaaS metrics. Real-time data visualization, subscription tracking, and revenue forecasting with a clean, intuitive interface.",
-    tags: ["React", "Next.js", "Stripe", "PostgreSQL"],
+      "Full-stack electrical supplies platform combining e-commerce with ERP — inventory, accounting, HR, and order management in one system.",
+    tags: ["Next.js", "PostgreSQL", "Prisma", "NextAuth"],
     image: "/images/project-1.jpg",
-    liveUrl: "#",
-    githubUrl: "#",
+    liveUrl: "https://himmat.store",
+    githubUrl: "https://github.com/Ahmed-err/ecommerce-accounting-system",
   },
   {
-    title: "E-Commerce Platform",
+    title: "PrintCraft",
     description:
-      "A headless storefront built on Shopify API delivering blazing-fast performance with a 99 Lighthouse score. Custom checkout flow and real-time inventory sync.",
-    tags: ["Next.js", "Shopify API", "Tailwind"],
+      "Custom print-on-demand platform with an interactive visual design builder, Paymob payment integration, and automated WhatsApp/SMS/email notifications.",
+    tags: ["React", "Express.js", "MongoDB", "Paymob"],
     image: "/images/project-2.jpg",
-    liveUrl: "#",
-    githubUrl: "#",
+    liveUrl: "https://harfoushprint.com",
+    githubUrl: "https://github.com/Ahmed-err/Print-Shop",
   },
   {
-    title: "Real-time Chat App",
+    title: "Tajdera",
     description:
-      "A scalable messaging platform supporting 10k concurrent users with typing indicators, read receipts, and end-to-end encryption.",
-    tags: ["Socket.io", "Node.js", "Redis"],
+      "A gamified personal budget tracker that roasts your spending habits with AI-style sarcasm across 4 shame tiers. Fully offline, bilingual Arabic/English.",
+    tags: ["React", "TypeScript", "Vite", "Framer Motion"],
     image: "/images/project-3.jpg",
-    liveUrl: "#",
-    githubUrl: "#",
+    liveUrl: "",
+    githubUrl: "https://github.com/Ahmed-err/tajdera",
   },
   {
-    title: "AI Content Generator",
+    title: "Sarmadax Agency Site",
     description:
-      "An intelligent content platform that generates SEO-optimized blog posts, social media copy, and marketing materials using advanced AI models.",
-    tags: ["OpenAI API", "Next.js", "Prisma"],
+      "A bilingual digital agency website built with Next.js, Framer Motion, and next-intl — featuring animated sections, a pricing page, portfolio, and contact form.",
+    tags: ["Next.js", "TypeScript", "next-intl", "Framer Motion"],
     image: "/images/project-4.jpg",
-    liveUrl: "#",
-    githubUrl: "#",
+    liveUrl: "",
+    githubUrl: "https://github.com/Ahmed-err/sarmadax",
   },
 ];
 
@@ -106,27 +106,27 @@ export const services: Service[] = [
 
 export const testimonials: Testimonial[] = [
   {
-    name: "Sarah Mitchell",
-    role: "CTO",
-    company: "NovaTech",
+    name: "Khalid Al-Otaibi",
+    role: "CEO",
+    company: "NafaaTech — Riyadh 🇸🇦",
     quote:
-      "Delivered our platform 2 weeks ahead of schedule with exceptional code quality. Alex's ability to translate complex requirements into elegant solutions is unmatched.",
+      "Sarmadax delivered our SaaS platform in under 6 weeks — clean code, flawless Arabic RTL, and a design our clients immediately trusted. Best tech investment we've made.",
     avatar: "/images/avatar-1.jpg",
   },
   {
-    name: "James Okafor",
-    role: "Founder",
-    company: "Launchpad",
+    name: "Omar Abdel-Fattah",
+    role: "Co-Founder",
+    company: "LogiTrack — Cairo 🇪🇬",
     quote:
-      "Exceptional attention to detail and clean code. Alex didn't just build what we asked for — he identified and solved problems we didn't even know we had.",
+      "We needed a complex logistics dashboard with real-time tracking and Arabic support. Ahmed nailed every requirement and went beyond what we asked for. Highly recommend.",
     avatar: "/images/avatar-2.jpg",
   },
   {
-    name: "Priya Nair",
-    role: "Product Manager",
-    company: "Finlo",
+    name: "Rania Mustafa",
+    role: "Founder",
+    company: "Bazaar Mobile — Khartoum 🇸🇩",
     quote:
-      "Alex turned a complex brief into a flawless product. Communication was always clear, deadlines were always met, and the end result exceeded our expectations.",
+      "Our e-commerce app launched to 30K+ downloads in the first three weeks. The interface feels premium, performance is excellent, and the team was responsive at every step.",
     avatar: "/images/avatar-3.jpg",
   },
 ];

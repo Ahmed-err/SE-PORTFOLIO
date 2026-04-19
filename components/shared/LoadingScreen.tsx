@@ -26,7 +26,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          AC
+          AY
         </motion.span>
         <motion.div
           className="h-0.5 bg-accent"

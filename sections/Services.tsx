@@ -1,14 +1,14 @@
 "use client";
 
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { Code, Smartphone, Server, Palette, Zap, Users } from "lucide-react";
+import { Code, Smartphone, Server, Palette, Zap, Users, Database, LayoutDashboard, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SectionWrapper from "@/components/shared/SectionWrapper";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import type { MouseEvent } from "react";
 
 const iconMap: Record<string, typeof Code> = {
-  Code, Smartphone, Server, Palette, Zap, Users,
+  Code, Smartphone, Server, Palette, Zap, Users, Database, LayoutDashboard, Sparkles,
 };
 
 const serviceKeys = [
@@ -17,7 +17,10 @@ const serviceKeys = [
   { key: "api", icon: "Server" },
   { key: "uiux", icon: "Palette" },
   { key: "performance", icon: "Zap" },
-  { key: "codeReview", icon: "Users" },
+  { key: "codeReview",  icon: "Users" },
+  { key: "systems",    icon: "Database" },
+  { key: "saas",       icon: "LayoutDashboard" },
+  { key: "ai",         icon: "Sparkles" },
 ] as const;
 
 function ServiceCard({

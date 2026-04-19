@@ -8,9 +8,9 @@ import SectionWrapper from "@/components/shared/SectionWrapper";
 import { fadeUp } from "@/lib/animations";
 
 const testimonialKeys = [
-  { key: "sarah", name: "Sarah Mitchell", role: "CTO", company: "NovaTech" },
-  { key: "james", name: "James Okafor", role: "Founder", company: "Launchpad" },
-  { key: "priya", name: "Priya Nair", role: "Product Manager", company: "Finlo" },
+  { key: "khalid", name: "Khalid Al-Otaibi",    role: "CEO",          company: "NafaaTech — Riyadh 🇸🇦" },
+  { key: "omar",   name: "Omar Abdel-Fattah",   role: "Co-Founder",   company: "LogiTrack — Cairo 🇪🇬" },
+  { key: "rania",  name: "Rania Mustafa",        role: "Founder",      company: "Bazaar Mobile — Khartoum 🇸🇩" },
 ] as const;
 
 const slideVariants = {
