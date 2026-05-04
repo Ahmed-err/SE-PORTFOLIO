@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
       await resend.emails.send({
         from: "Portfolio Contact <onboarding@resend.dev>",
-        to: "hello@alexcarter.dev",
+        to: process.env.CONTACT_EMAIL ?? "ahmedmax0909090909@gmail.com",
         subject: `New message from ${name}`,
         text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       });

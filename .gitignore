@@ -1,2 +1,22 @@
 node_modules/
 .next/
+.vercel/
+dist/
+build/
+
+# env
+.env
+.env.local
+.env*.local
+
+# build artifacts
+tsconfig.tsbuildinfo
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+CLAUDE.md
