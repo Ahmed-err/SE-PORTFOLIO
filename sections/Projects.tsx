@@ -8,6 +8,7 @@ import {
   useSpring,
   AnimatePresence,
 } from "framer-motion";
+import Image from "next/image";
 import { ExternalLink, Code2, BookOpen, X, CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SectionWrapper from "@/components/shared/SectionWrapper";
@@ -15,10 +16,11 @@ import { staggerContainer, fadeUp } from "@/lib/animations";
 import type { MouseEvent } from "react";
 
 const projectKeys = [
-  { key: "electroerp", tags: ["Next.js", "PostgreSQL", "Prisma", "NextAuth"],        live: "https://himmat.store",       github: "https://github.com/Ahmed-err/ecommerce-accounting-system" },
-  { key: "printshop",  tags: ["React", "Express.js", "MongoDB", "Paymob"],            live: "https://harfoushprint.com",  github: "https://github.com/Ahmed-err/Print-Shop" },
-  { key: "tajdera",    tags: ["React", "TypeScript", "Vite", "Framer Motion"],        live: null,                         github: "https://github.com/Ahmed-err/tajdera" },
-  { key: "sarmadax",  tags: ["Next.js", "TypeScript", "next-intl", "Framer Motion"], live: null,                         github: "https://github.com/Ahmed-err/sarmadax" },
+  { key: "electroerp", image: "/images/projects/electroerp.png", tags: ["Next.js", "PostgreSQL", "Prisma", "NextAuth"], live: "https://himmat.store", github: "https://github.com/Ahmed-err/ecommerce-accounting-system" },
+  { key: "printshop",  image: "/images/projects/printshop.png",  tags: ["React", "Express.js", "MongoDB", "Paymob"],            live: "https://harfoushprint.com", github: "https://github.com/Ahmed-err/Print-Shop" },
+  { key: "tajdera",    image: "/images/projects/tajdera.png",    tags: ["React", "TypeScript", "Vite", "Framer Motion"],        live: "https://girishatk.vercel.app", github: "https://github.com/Ahmed-err/tajdera" },
+  { key: "sarmadax",   image: "/images/projects/sarmadax.png",   tags: ["Next.js", "TypeScript", "next-intl", "Framer Motion"], live: "https://sarmadax.com", github: "https://github.com/Ahmed-err/sarmadax" },
+  { key: "rudd",       image: "/images/projects/rudd.png",       tags: ["Next.js 15", "OpenAI", "WhatsApp API", "Google Calendar", "Clerk", "Inngest"], live: "https://rudd-web.vercel.app", github: null },
 ] as const;
 
 type ProjectKey = (typeof projectKeys)[number]["key"];
@@ -38,7 +40,7 @@ function CaseStudyModal({
   description: string;
   tags: readonly string[];
   live: string | null;
-  github: string;
+  github: string | null;
   onClose: () => void;
 }) {
   const t = useTranslations("projects");
@@ -188,16 +190,18 @@ function CaseStudyModal({
                 {ct("liveDemo")}
               </a>
             )}
-            <a
-              href={github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
-              data-cursor-hover
-            >
-              <Code2 size={14} />
-              {ct("sourceCode")}
-            </a>
+            {github && (
+              <a
+                href={github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-accent hover:text-accent"
+                data-cursor-hover
+              >
+                <Code2 size={14} />
+                {ct("sourceCode")}
+              </a>
+            )}
           </div>
         </div>
       </motion.div>
@@ -209,6 +213,7 @@ function CaseStudyModal({
 function ProjectCard({
   title,
   description,
+  image,
   tags,
   index,
   live,
@@ -217,10 +222,11 @@ function ProjectCard({
 }: {
   title: string;
   description: string;
+  image: string;
   tags: readonly string[];
   index: number;
   live: string | null;
-  github: string;
+  github: string | null;
   onCaseStudy: () => void;
 }) {
   const t = useTranslations("projects");
@@ -253,11 +259,13 @@ function ProjectCard({
     >
       {/* Image / preview area */}
       <div className="relative aspect-video overflow-hidden bg-background">
-        <div className="flex h-full items-center justify-center bg-gradient-to-br from-card to-background transition-transform duration-500 group-hover:scale-105">
-          <div className="absolute inset-0 bg-dot-grid opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-accent-light/5" />
-          <span className="relative text-xl font-bold text-text-muted/40">{title}</span>
-        </div>
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
         {/* Hover overlay */}
         <div className="absolute inset-0 flex items-center justify-center gap-4 bg-accent/90 translate-y-full transition-transform duration-[400ms] ease-out group-hover:translate-y-0">
           {live && (
@@ -272,16 +280,18 @@ function ProjectCard({
               <ExternalLink size={18} />
             </motion.a>
           )}
-          <motion.a
-            href={github} target="_blank" rel="noopener noreferrer"
-            className="rounded-full bg-white p-3 text-accent"
-            aria-label="GitHub repo"
-            data-cursor-hover
-            whileHover={{ scale: 1.15 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Code2 size={18} />
-          </motion.a>
+          {github && (
+            <motion.a
+              href={github} target="_blank" rel="noopener noreferrer"
+              className="rounded-full bg-white p-3 text-accent"
+              aria-label="GitHub repo"
+              data-cursor-hover
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Code2 size={18} />
+            </motion.a>
+          )}
         </div>
       </div>
 
@@ -347,6 +357,7 @@ export default function Projects() {
               key={p.key}
               title={t(p.key)}
               description={t(`${p.key}Desc`)}
+              image={p.image}
               tags={p.tags}
               index={i}
               live={p.live}

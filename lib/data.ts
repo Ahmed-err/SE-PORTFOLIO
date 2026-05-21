@@ -32,7 +32,7 @@ export const projects: Project[] = [
     description:
       "Full-stack electrical supplies platform combining e-commerce with ERP — inventory, accounting, HR, and order management in one system.",
     tags: ["Next.js", "PostgreSQL", "Prisma", "NextAuth"],
-    image: "/images/project-1.jpg",
+    image: "/images/projects/electroerp.png",
     liveUrl: "https://himmat.store",
     githubUrl: "https://github.com/Ahmed-err/ecommerce-accounting-system",
   },
@@ -41,7 +41,7 @@ export const projects: Project[] = [
     description:
       "Custom print-on-demand platform with an interactive visual design builder, Paymob payment integration, and automated WhatsApp/SMS/email notifications.",
     tags: ["React", "Express.js", "MongoDB", "Paymob"],
-    image: "/images/project-2.jpg",
+    image: "/images/project-printshop.jpg",
     liveUrl: "https://harfoushprint.com",
     githubUrl: "https://github.com/Ahmed-err/Print-Shop",
   },
@@ -50,8 +50,8 @@ export const projects: Project[] = [
     description:
       "A gamified personal budget tracker that roasts your spending habits with AI-style sarcasm across 4 shame tiers. Fully offline, bilingual Arabic/English.",
     tags: ["React", "TypeScript", "Vite", "Framer Motion"],
-    image: "/images/project-3.jpg",
-    liveUrl: "",
+    image: "/images/project-tajdera.jpg",
+    liveUrl: "https://girishatk.vercel.app",
     githubUrl: "https://github.com/Ahmed-err/tajdera",
   },
   {
@@ -59,9 +59,18 @@ export const projects: Project[] = [
     description:
       "A bilingual digital agency website built with Next.js, Framer Motion, and next-intl — featuring animated sections, a pricing page, portfolio, and contact form.",
     tags: ["Next.js", "TypeScript", "next-intl", "Framer Motion"],
-    image: "/images/project-4.jpg",
-    liveUrl: "",
+    image: "/images/projects/sarmadax.png",
+    liveUrl: "https://sarmadax.com",
     githubUrl: "https://github.com/Ahmed-err/sarmadax",
+  },
+  {
+    title: "Rudd",
+    description:
+      "AI-powered WhatsApp appointment agent — connects to Google Calendar and handles bookings, reminders, and lead qualification automatically.",
+    tags: ["Next.js 15", "OpenAI", "WhatsApp Cloud API", "Google Calendar API", "Clerk", "Inngest"],
+    image: "/images/projects/rudd.png",
+    liveUrl: "https://rudd-web.vercel.app",
+    githubUrl: "",
   },
 ];
 
