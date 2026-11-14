@@ -1,0 +1,379 @@
+{
+ "ar": {
+  "name": "أحمد يوسف",
+  "role": "مهندس برمجيات، ومؤسس سرمدكس",
+  "tagline": "من ضفاف النيل إلى العالم",
+  "introSound": "ادخل بالصوت",
+  "introSilent": "ادخل بدون صوت",
+  "introNote": "رحلة ثلاثية الأبعاد على النيل",
+  "hint": "اسحب للأسفل لتبحر. المس هرماً ليغنّي، والمس الماء.",
+  "gates": [
+   {
+    "name": "المعرض",
+    "line": "أعمال حقيقية تعمل الآن عند أصحابها.",
+    "enter": "ادخل المعرض"
+   },
+   {
+    "name": "سماء الخدمات",
+    "line": "كل نجمة خدمة أقدّمها.",
+    "enter": "اصعد إلى السماء"
+   },
+   {
+    "name": "المجلس",
+    "line": "اجلس، ولنتحدث عن مشروعك.",
+    "enter": "ادخل المجلس"
+   }
+  ],
+  "back": "العودة إلى النيل",
+  "galleryHint": "اسحب لتدور بين الأعمال، والمس اللوحة لتفتحها.",
+  "skyHint": "اسحب لتنظر حولك، والمس نجمة.",
+  "open": "افتح المشروع",
+  "visit": "زيارة الموقع",
+  "built": "ما بنيته",
+  "challenge": "التحدي",
+  "solution": "الحل",
+  "close": "إغلاق",
+  "prev": "السابق",
+  "next": "التالي",
+  "skills": "التقنيات التي أعمل بها",
+  "dusk": "الغروب",
+  "night": "الليل",
+  "soundOn": "تشغيل الصوت",
+  "soundOff": "إيقاف الصوت",
+  "lang": "English",
+  "places": {
+   "river": "النيل",
+   "gallery": "المعرض",
+   "sky": "السماء",
+   "majlis": "المجلس"
+  },
+  "whatsapp": "واتساب",
+  "mail": "البريد",
+  "noWebgl": "هذه الرحلة تحتاج WebGL، وهو متوقف في هذا المتصفح.",
+  "timeLabel": "وقت المشهد",
+  "projects": [
+   {
+    "key": "electroerp",
+    "title": "ElectroPro ERP",
+    "desc": "منصة متكاملة لمستلزمات الكهرباء تجمع التجارة الإلكترونية مع ERP — مخزون، محاسبة، موارد بشرية، وإدارة طلبات في نظام واحد. متاح على himmat.store.",
+    "challenge": "كانت شركة كهربائية تقليدية تدير المخزون والمبيعات والمحاسبة والموارد البشرية والطلبات عبر جداول بيانات منفصلة ومكالمات هاتفية — مما أدى إلى أخطاء في المخزون وتأخيرات في الفواتير وخسارة في الإيرادات دون مصدر موثوق للمعلومات.",
+    "solution": "بناء منصة ERP متكاملة على Next.js وPostgreSQL تجمع جميع عمليات الأعمال في نظام واحد مع صلاحيات قائمة على الأدوار، وتتبع مخزون لحظي، ومحاسبة بقيد مزدوج، وواجهة بيع للعملاء — كل ذلك على himmat.store.",
+    "features": [
+     "صلاحيات حسب الأدوار للمدير والمخزن والمحاسب وفريق المبيعات",
+     "تتبع مخزون لحظي مع تنبيهات النقص وإدارة الموردين",
+     "محاسبة بقيد مزدوج مع قيود آلية وتقارير مالية",
+     "بوابة عملاء لتتبع الطلبات وإنشاء الفواتير"
+    ],
+    "url": "https://himmat.store",
+    "img": "/images/projects/electroerp.png"
+   },
+   {
+    "key": "printshop",
+    "title": "PrintCraft",
+    "desc": "منصة طباعة مخصصة مع منشئ تصميم بصري تفاعلي، وتكامل مدفوعات Paymob، وإشعارات آلية عبر واتساب ورسائل نصية وبريد إلكتروني.",
+    "challenge": "كان محل طباعة يخسر عملاءه لأن الطلبات تُؤخذ بالهاتف وملفات التصميم تُرسل يدوياً والعملاء لا يعرفون حالة طلباتهم — مما أوجد احتكاكاً في كل خطوة من خطوات البيع.",
+    "solution": "تسليم منصة تجارة إلكترونية متكاملة مع محرر تصميم داخل المتصفح يتيح للعملاء رفع الصور وإضافة النصوص ومعاينة المنتج قبل الشراء، مع تكامل Paymob وإشعارات آلية عبر واتساب ورسائل نصية وبريد إلكتروني.",
+    "features": [
+     "محرر تصميم داخل المتصفح مع معاينة حية للمنتج",
+     "بوابة Paymob مع دعم البطاقات والمحافظ الإلكترونية",
+     "إشعارات آلية عبر واتساب ورسائل نصية وبريد إلكتروني",
+     "لوحة إدارة لإدارة الطلبات والتنفيذ"
+    ],
+    "url": "https://harfoushprint.com",
+    "img": "/images/projects/printshop.png"
+   },
+   {
+    "key": "rudd",
+    "title": "رُدّ",
+    "desc": "منصة SaaS تربط واتساب وجوجل كالندر ليعالج وكيل ذكاء اصطناعي الحجوزات وتأهيل العملاء على مدار الساعة — دون الحاجة لموظفين.",
+    "challenge": "أصحاب الشركات الصغيرة في منطقة الشرق الأوسط وشمال أفريقيا يخسرون عشرات العملاء كل أسبوع لأنهم لا يستطيعون الرد على استفسارات واتساب بسرعة كافية. حجز المواعيد يدوياً وإرسال التذكيرات ومتابعة العملاء عمل دوام كامل لا تستطيع معظم الشركات تحمل تكاليفه.",
+    "solution": "رُدّ يتصل بحساب واتساب للأعمال وجوجل كالندر ثم يطلق وكيل ذكاء اصطناعي يتولى عملية الحجز كاملة بشكل محادثاتي — بالعربية أو الإنجليزية. يؤهل العميل المحتمل ويتحقق من التوفر ويحجز الموعد ويرسل التأكيد دون تدخل بشري.",
+    "features": [
+     "تكامل واتساب للأعمال وجوجل كالندر",
+     "محادثة حجز بالذكاء الاصطناعي بالعربية والإنجليزية",
+     "OpenAI مع سير عمل دائمة عبر Inngest",
+     "مصادقة متعددة المستأجرين عبر Clerk على Next.js 15"
+    ],
+    "url": "https://rudd-web.vercel.app",
+    "img": "/images/projects/rudd.png"
+   },
+   {
+    "key": "sarmadax",
+    "title": "موقع وكالة سرمداكس",
+    "desc": "موقع وكالة رقمية ثنائي اللغة مبني بـ Next.js وFramer Motion وnext-intl — يتضمن أقساماً متحركة وصفحة أسعار وبورتفوليو ونموذج تواصل.",
+    "challenge": "وكالة رقمية في نمو احتاجت موقعاً يخدم العملاء العرب والإنجليز بجودة متساوية — مع تخطيط RTL صحيح تاماً وحركات تمرير راقية وبنية تحول الزوار إلى عملاء.",
+    "solution": "بناء موقع Next.js ثنائي اللغة بالكامل مع next-intl لتبديل اللغة عبر الكوكيز، وFramer Motion لحركات عند التمرير، ونظام تصميم يجتاز جميع فحوصات التخطيط في وضعي LTR وRTL دون أي تعديلات استثنائية.",
+    "features": [
+     "دعم ثنائي اللغة عربي/إنجليزي مع تخطيط RTL صحيح",
+     "حركات Framer Motion عند التمرير في جميع الأقسام",
+     "صفحة أسعار ومعرض أعمال ونموذج تواصل متحرك",
+     "تبديل اللغة عبر الكوكيز دون تغيير بادئة الرابط"
+    ],
+    "url": "https://sarmadax.com",
+    "img": "/images/projects/sarmadax.png"
+   },
+   {
+    "key": "tajdera",
+    "title": "تجديرة",
+    "desc": "تطبيق تتبع ميزانية شخصية ممتع يسخر من عاداتك الإنفاقية عبر 4 مستويات عار. يعمل بالكامل دون إنترنت، ثنائي اللغة عربي/إنجليزي.",
+    "challenge": "معظم تطبيقات التمويل الشخصي تبدو كواجب مدرسي — المستخدمون يفتحونها مرة ثم يتركونها. التحدي كان بناء شيء يريد الناس العودة إليه فعلاً، وتتبع الميزانية فيه ممتع لا مضنٍ.",
+    "solution": "بناء متتبع ميزانية ممتع يسخر من عادات الإنفاق بأسلوب ذكاء اصطناعي ساخر عبر 4 مستويات خجل متصاعدة. يعمل بالكامل دون إنترنت مع localStorage دون حاجة لحساب، مع دعم ثنائي اللغة عربي/إنجليزي وتخطيط RTL كامل.",
+    "features": [
+     "4 مستويات خجل متصاعدة مع تعليقات ساخرة بأسلوب الذكاء الاصطناعي",
+     "يعمل 100% دون إنترنت — كل البيانات في localStorage دون خادم",
+     "دعم ثنائي اللغة عربي/إنجليزي مع تخطيط RTL كامل",
+     "ردود فعل متحركة بـ Framer Motion على كل تفاعل"
+    ],
+    "url": "https://girishatk.vercel.app",
+    "img": "/images/projects/tajdera.png"
+   }
+  ],
+  "services": [
+   {
+    "title": "أنظمة الأعمال وإدارة الموارد",
+    "desc": "أنظمة ERP وCRM وأدوات داخلية مخصصة تستبدل جداول البيانات المتفرقة بنظام موحد قائم على الأدوار ومبني وفق سير عملك."
+   },
+   {
+    "title": "تطوير ويب متكامل",
+    "desc": "تطبيقات ويب شاملة مبنية بأحدث الأطر البرمجية، محسّنة للأداء وقابلية التوسع."
+   },
+   {
+    "title": "تطوير منتجات SaaS",
+    "desc": "منصات SaaS متكاملة مع دعم متعدد المستأجرين وفوترة الاشتراكات وتدفقات الإعداد والبنية التحتية الكافية للتوسع من الصفر إلى آلاف المستخدمين."
+   },
+   {
+    "title": "ميزات مدعومة بالذكاء الاصطناعي",
+    "desc": "تكاملات ذكاء اصطناعي عملية — بحث ذكي، توليد محتوى، تحليل بيانات، وأتمتة سير العمل — مبنية فوق منتجك الحالي مباشرةً."
+   },
+   {
+    "title": "تطبيقات الهاتف",
+    "desc": "تطبيقات هاتف متعددة المنصات باستخدام React Native، توفر أداءً أصلياً على iOS و Android."
+   },
+   {
+    "title": "واجهات REST و GraphQL",
+    "desc": "واجهات برمجية قوية وموثقة جيداً، مصممة للموثوقية والأمان وتجربة المطور."
+   },
+   {
+    "title": "استشارات UI/UX",
+    "desc": "تدقيق التصميم واستشارات تجربة المستخدم لتحسين معدلات التحويل ورضا المستخدمين."
+   },
+   {
+    "title": "تحسين الأداء",
+    "desc": "تدقيق السرعة والتحسين — من تقليل حجم الحزم إلى ضبط استعلامات قاعدة البيانات واستراتيجيات التخزين المؤقت."
+   },
+   {
+    "title": "مراجعة الأكواد والتوجيه",
+    "desc": "مراجعات أكواد شاملة وتوجيه فردي لرفع مستوى ممارسات الهندسة في فريقك."
+   }
+  ],
+  "contact": {
+   "title": "لنعمل معاً",
+   "desc": "هل لديك مشروع في ذهنك؟ أحب أن أسمع عنه. أرسل لي رسالة وسأعود إليك خلال 24 ساعة.",
+   "name": "اسمك",
+   "email": "بريدك الإلكتروني",
+   "message": "رسالتك",
+   "send": "إرسال الرسالة",
+   "sending": "جاري الإرسال...",
+   "sent": "تم إرسال الرسالة!",
+   "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+   "location": "السودان — عالمياً"
+  }
+ },
+ "en": {
+  "name": "Ahmed Yousif",
+  "role": "Software engineer, founder of SarmadaX",
+  "tagline": "From the banks of the Nile to the world",
+  "introSound": "Enter with sound",
+  "introSilent": "Enter without sound",
+  "introNote": "A 3D journey along the Nile",
+  "hint": "Scroll down to sail. Tap a pyramid to hear it sing, and tap the water.",
+  "gates": [
+   {
+    "name": "The Gallery",
+    "line": "Real work, running today for the people who own it.",
+    "enter": "Enter the gallery"
+   },
+   {
+    "name": "The Sky of Services",
+    "line": "Every star is a service I offer.",
+    "enter": "Rise to the sky"
+   },
+   {
+    "name": "The Majlis",
+    "line": "Sit down, and tell me about your project.",
+    "enter": "Enter the majlis"
+   }
+  ],
+  "back": "Back to the Nile",
+  "galleryHint": "Drag to move between projects, and tap a frame to open it.",
+  "skyHint": "Drag to look around, and tap a star.",
+  "open": "Open project",
+  "visit": "Visit the site",
+  "built": "What I built",
+  "challenge": "The challenge",
+  "solution": "The solution",
+  "close": "Close",
+  "prev": "Previous",
+  "next": "Next",
+  "skills": "The tools I work with",
+  "dusk": "Dusk",
+  "night": "Night",
+  "soundOn": "Turn sound on",
+  "soundOff": "Turn sound off",
+  "lang": "العربية",
+  "places": {
+   "river": "The Nile",
+   "gallery": "Gallery",
+   "sky": "Sky",
+   "majlis": "Majlis"
+  },
+  "whatsapp": "WhatsApp",
+  "mail": "Email",
+  "noWebgl": "This journey needs WebGL, which is turned off in this browser.",
+  "timeLabel": "Time of day",
+  "projects": [
+   {
+    "key": "electroerp",
+    "title": "ElectroPro ERP",
+    "desc": "Full-stack electrical supplies platform combining e-commerce with ERP — inventory, accounting, HR, and order management in one system. Live at himmat.store.",
+    "challenge": "A traditional electrical supplies business was managing inventory, sales, accounting, HR, and orders across disconnected spreadsheets and phone calls — causing stock errors, billing delays, and lost revenue with no single source of truth.",
+    "solution": "Built a unified full-stack ERP on Next.js and PostgreSQL that consolidates all business operations into one system with role-based access, real-time inventory tracking, double-entry accounting, and a customer-facing storefront — all live at himmat.store.",
+    "features": [
+     "Role-based access for admin, warehouse, accountant, and sales staff",
+     "Real-time inventory with low-stock alerts and supplier management",
+     "Double-entry accounting with automated journal entries and reports",
+     "Customer portal with order tracking and invoice generation"
+    ],
+    "url": "https://himmat.store",
+    "img": "/images/projects/electroerp.png"
+   },
+   {
+    "key": "printshop",
+    "title": "PrintCraft",
+    "desc": "Custom print-on-demand platform with an interactive visual design builder, Paymob payment integration, and automated WhatsApp/SMS/email notifications.",
+    "challenge": "A print-on-demand shop was losing customers because orders were placed by phone, design files emailed manually, and customers had zero visibility into their order status — creating friction at every step of the sales funnel.",
+    "solution": "Delivered a full e-commerce platform with an in-browser design builder where customers upload artwork, add text, and preview their product before purchasing. Integrated Paymob for card/wallet payments and automated WhatsApp, SMS, and email notifications at every order stage.",
+    "features": [
+     "In-browser design builder with live product preview",
+     "Paymob gateway with card and mobile-wallet support",
+     "Automated WhatsApp, SMS, and email order notifications",
+     "Admin dashboard for order management and fulfillment"
+    ],
+    "url": "https://harfoushprint.com",
+    "img": "/images/projects/printshop.png"
+   },
+   {
+    "key": "rudd",
+    "title": "Rudd",
+    "desc": "SaaS platform that connects WhatsApp and Google Calendar so an AI agent handles bookings and lead qualification 24/7 — no staff needed.",
+    "challenge": "Small business owners in MENA lose dozens of leads every week because they cannot respond to WhatsApp inquiries fast enough. Manually booking appointments, sending reminders, and following up with leads is a full-time job most businesses cannot staff properly.",
+    "solution": "Rudd connects to your WhatsApp Business account and Google Calendar, then deploys an AI agent that handles the entire booking flow conversationally — in Arabic or English. It qualifies the lead, checks calendar availability, books the appointment, and sends confirmation without human intervention.",
+    "features": [
+     "WhatsApp Business + Google Calendar integration",
+     "AI booking conversation in Arabic and English",
+     "OpenAI function calling with Inngest durable workflows",
+     "Multi-tenant auth via Clerk on Next.js 15"
+    ],
+    "url": "https://rudd-web.vercel.app",
+    "img": "/images/projects/rudd.png"
+   },
+   {
+    "key": "sarmadax",
+    "title": "Sarmadax Agency Site",
+    "desc": "A bilingual digital agency website built with Next.js, Framer Motion, and next-intl — featuring animated sections, a pricing page, portfolio, and contact form.",
+    "challenge": "A growing digital agency needed a website that could simultaneously serve Arabic-speaking and English-speaking clients with equal quality — demanding perfect RTL layout, premium scroll animations, and a structure that converts visitors into leads.",
+    "solution": "Built a fully bilingual Next.js site with next-intl for cookie-based locale switching, Framer Motion for scroll-triggered animations, and a design system that passes all layout correctness checks in both LTR and RTL modes with no overrides or hacks.",
+    "features": [
+     "Full Arabic/English bilingual support with correct RTL layout",
+     "Scroll-triggered Framer Motion animations across all sections",
+     "Pricing page, portfolio gallery, and animated contact form",
+     "Cookie-based locale switching with no URL prefix changes"
+    ],
+    "url": "https://sarmadax.com",
+    "img": "/images/projects/sarmadax.png"
+   },
+   {
+    "key": "tajdera",
+    "title": "Tajdera",
+    "desc": "A gamified personal budget tracker that roasts your spending habits with AI-style sarcasm across 4 shame tiers. Fully offline, bilingual Arabic/English.",
+    "challenge": "Most personal finance apps feel like homework — users open them once and abandon them. The challenge was building something that people genuinely want to return to, where tracking a budget feels rewarding instead of tedious.",
+    "solution": "Built a gamified budget tracker that roasts spending habits with AI-style sarcasm across 4 escalating shame tiers. Fully offline-first with localStorage so no account is needed, with complete bilingual Arabic/English support and RTL layout throughout.",
+    "features": [
+     "4 escalating shame tiers with sarcastic AI-style commentary",
+     "100% offline — all data in localStorage, zero backend needed",
+     "Full Arabic/English bilingual support with RTL layout",
+     "Framer Motion animated feedback on every interaction"
+    ],
+    "url": "https://girishatk.vercel.app",
+    "img": "/images/projects/tajdera.png"
+   }
+  ],
+  "services": [
+   {
+    "title": "Business Systems & ERP",
+    "desc": "Custom ERP, CRM, and internal tools that replace disconnected spreadsheets with one unified, role-based system built for your workflow."
+   },
+   {
+    "title": "Full-Stack Web Development",
+    "desc": "End-to-end web applications built with modern frameworks, optimized for performance and scalability."
+   },
+   {
+    "title": "SaaS Product Development",
+    "desc": "End-to-end SaaS platforms with multi-tenancy, subscription billing, onboarding flows, and the architecture to scale from zero to thousands of users."
+   },
+   {
+    "title": "AI-Powered Features",
+    "desc": "Practical AI integrations — smart search, content generation, data analysis, and workflow automation — built on top of your existing product."
+   },
+   {
+    "title": "Mobile Apps",
+    "desc": "Cross-platform mobile applications with React Native, delivering native performance on iOS and Android."
+   },
+   {
+    "title": "REST & GraphQL APIs",
+    "desc": "Robust, well-documented APIs designed for reliability, security, and developer experience."
+   },
+   {
+    "title": "UI/UX Consulting",
+    "desc": "Design audits and user experience consulting to improve conversion rates and user satisfaction."
+   },
+   {
+    "title": "Performance Optimization",
+    "desc": "Speed audits and optimization — from bundle size reduction to database query tuning and caching strategies."
+   },
+   {
+    "title": "Code Review & Mentoring",
+    "desc": "Thorough code reviews and 1-on-1 mentoring to level up your team's engineering practices."
+   }
+  ],
+  "contact": {
+   "title": "Let's Work Together",
+   "desc": "Have a project in mind? I'd love to hear about it. Send me a message and I'll get back to you within 24 hours.",
+   "name": "Your Name",
+   "email": "Your Email",
+   "message": "Your Message",
+   "send": "Send Message",
+   "sending": "Sending...",
+   "sent": "Message Sent!",
+   "error": "Something went wrong. Please try again.",
+   "location": "Sudan — Worldwide"
+  }
+ },
+ "skills": [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Node.js",
+  "Express",
+  "Python",
+  "PostgreSQL",
+  "MongoDB",
+  "Prisma",
+  "Tailwind CSS",
+  "Paymob",
+  "WhatsApp Cloud API"
+ ],
+ "email": "ahmedmax0909090909@gmail.com",
+ "whatsapp": "+20 150 709 0565",
+ "whatsappLink": "https://wa.me/201507090565"
+}

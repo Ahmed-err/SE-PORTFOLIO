@@ -11,7 +11,7 @@ export default function Icon() {
           width: 32,
           height: 32,
           borderRadius: 8,
-          background: "linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)",
+          background: "linear-gradient(160deg, #2a1a55 0%, #f2893a 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -19,7 +19,7 @@ export default function Icon() {
           fontWeight: 800,
           fontSize: 13,
           letterSpacing: "-0.5px",
-          color: "white",
+          color: "#fff6df",
         }}
       >
         AY
