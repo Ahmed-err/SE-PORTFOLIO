@@ -17,6 +17,9 @@ export interface Engine {
   rush: () => void;
   setTime: (d: number) => void;
   stepGallery: (dir: number) => void;
+  /** elements to keep pinned under each service star, in service order */
+  setStarLabels: (els: HTMLElement[]) => void;
+  selectService: (index: number) => void;
   enableAudio: () => void;
   setMuted: (m: boolean) => void;
   dispose: () => void;
@@ -866,6 +869,8 @@ function buildSky(sound: Sound, count: number, cb: EngineCallbacks) {
   let yawT = 0;
   let pitchT = 0.42;
   let selected = -1;
+  let labels: HTMLElement[] = [];
+  const proj = new THREE.Vector3();
   const look = new THREE.Vector3();
   const update = (t: number) => {
     yaw += (yawT - yaw) * 0.1;
@@ -873,6 +878,21 @@ function buildSky(sound: Sound, count: number, cb: EngineCallbacks) {
     cam.position.set(0, 1.6, 0);
     look.set(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(10).add(cam.position);
     cam.lookAt(look);
+    if (labels.length) {
+      /* pin each label just under its star */
+      cam.updateMatrixWorld();
+      cam.matrixWorldInverse.copy(cam.matrixWorld).invert();
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const drop = (h / (2 * Math.tan((cam.fov * Math.PI) / 360))) * (4.2 / 46);
+      for (let i = 0; i < labels.length && i < pts.length; i++) {
+        proj.copy(pts[i]).project(cam);
+        const on = proj.z < 1 && Math.abs(proj.x) < 1.15 && Math.abs(proj.y) < 1.1;
+        const el = labels[i];
+        el.style.visibility = on ? "visible" : "hidden";
+        if (on) el.style.transform = `translate(${((proj.x + 1) / 2) * w}px, ${((1 - proj.y) / 2) * h + drop}px) translate(-50%, 0)`;
+      }
+    }
     halos.forEach((h, i) => {
       const s = i === selected ? 12 + Math.sin(t * 4) * 1.5 : 7 + Math.sin(t * 1.5 + i) * 0.8;
       h.scale.setScalar(s);
@@ -888,17 +908,24 @@ function buildSky(sound: Sound, count: number, cb: EngineCallbacks) {
       sm.opacity = Math.sin(sa * Math.PI) * 0.9;
     } else sm.opacity = 0;
   };
-  const click = (ray: THREE.Raycaster) => {
-    const hit = ray.intersectObjects(targets)[0];
-    if (!hit) return;
-    selected = hit.object.userData.index as number;
+  const select = (index: number) => {
+    if (index < 0 || index >= pts.length) return;
+    selected = index;
     const v = pts[selected];
     yawT = Math.atan2(v.x, -v.z);
     pitchT = Math.max(0.05, Math.asin(v.y / 46) - 0.16);
     sound.note(392 * SCALE[selected % SCALE.length], 2.6, 0.16);
     cb.onService(selected);
   };
-  const rig: PlaceRig = {
+  const click = (ray: THREE.Raycaster) => {
+    const hit = ray.intersectObjects(targets)[0];
+    if (hit) select(hit.object.userData.index as number);
+  };
+  const rig: PlaceRig & { select: (i: number) => void; setLabels: (els: HTMLElement[]) => void } = {
+    select,
+    setLabels: (els) => {
+      labels = els;
+    },
     scene,
     camera: cam,
     update,
@@ -1055,6 +1082,7 @@ function buildMajlis(state: { mx: number; my: number; portrait: boolean }) {
 
   const look = new THREE.Vector3();
   let ox = 0;
+  let viewKey = "";
   const update = (t: number) => {
     ox += ((state.mx - 0.5) * 0.5 - ox) * 0.04;
     const a = 0.35 + Math.sin(t * 0.13) * 0.28 + ox;
@@ -1062,6 +1090,17 @@ function buildMajlis(state: { mx: number; my: number; portrait: boolean }) {
     cam.position.set(Math.sin(a) * r, state.portrait ? 2.6 : 2.2, Math.cos(a) * r);
     look.set(0, state.portrait ? -1.1 : 0.7, 0);
     cam.lookAt(look);
+    /* on wide screens the form sits to one side; slide the picture so the
+       setting is centred in the space that is left */
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const shift = vw >= 900 ? (document.documentElement.dir === "rtl" ? -1 : 1) * 214 : 0;
+    const key = shift ? vw + "x" + vh + ":" + shift : "";
+    if (key !== viewKey) {
+      viewKey = key;
+      if (shift) cam.setViewOffset(vw, vh, shift, 0, vw, vh);
+      else cam.clearViewOffset();
+    }
     lampLight.intensity = 9 + Math.sin(t * 9) * 0.8 + Math.sin(t * 23) * 0.5;
     water.uniforms.t.value = t;
     const pos = eg.attributes.position;
@@ -1088,7 +1127,7 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const sound = new Sound();
   const state = { progress: 0, tod: 0, mx: 0.5, my: 0.5, portrait: false, rush: -1 };
-  const rigs: Record<Place, PlaceRig> = {
+  const rigs = {
     river: buildRiver(sound, state),
     gallery: buildGallery(sound, images, cb, state),
     sky: buildSky(sound, serviceCount, cb),
@@ -1177,6 +1216,8 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
       state.tod = d;
     },
     stepGallery: (d) => (rigs.gallery as PlaceRig & { stepBy: (d: number) => void }).stepBy(d),
+    setStarLabels: (els) => rigs.sky.setLabels(els),
+    selectService: (i) => rigs.sky.select(i),
     enableAudio: () => sound.enable(),
     setMuted: (m) => sound.setMuted(m),
     dispose: () => {

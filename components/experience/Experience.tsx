@@ -13,6 +13,7 @@ export default function Experience() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const savedScroll = useRef(0);
+  const starsRef = useRef<HTMLDivElement>(null);
 
   const [lang, setLang] = useState<Lang>("ar");
   const [entered, setEntered] = useState(false);
@@ -137,6 +138,14 @@ export default function Experience() {
     engineRef.current?.setMuted(next);
     setMuted(next);
   };
+
+  /* service names ride under their stars */
+  useEffect(() => {
+    if (place !== "sky" || !starsRef.current) return;
+    const engine = engineRef.current;
+    engine?.setStarLabels(Array.from(starsRef.current.children) as HTMLElement[]);
+    return () => engine?.setStarLabels([]);
+  }, [place]);
 
   /* close the project sheet with Escape */
   useEffect(() => {
@@ -300,6 +309,15 @@ export default function Experience() {
 
       {/* sky */}
       {place === "sky" && (
+        <div className="xp-stars" ref={starsRef}>
+          {t.services.map((s, i) => (
+            <button key={i} type="button" className={i === service ? "on" : ""} aria-pressed={i === service} onClick={() => engineRef.current?.selectService(i)}>
+              {s.title}
+            </button>
+          ))}
+        </div>
+      )}
+      {place === "sky" && (
         <section className="xp-panel xp-sky" aria-live="polite">
           {service === null ? (
             <>
@@ -330,11 +348,11 @@ export default function Experience() {
           <h2>{t.contact.title}</h2>
           <p>{t.contact.desc}</p>
           <form onSubmit={submit}>
-            <label>
+            <label className="half">
               <span>{t.contact.name}</span>
               <input name="name" type="text" autoComplete="name" required />
             </label>
-            <label>
+            <label className="half">
               <span>{t.contact.email}</span>
               <input name="email" type="email" autoComplete="email" required dir="ltr" />
             </label>
