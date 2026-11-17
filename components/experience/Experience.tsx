@@ -107,15 +107,18 @@ export default function Experience() {
   const go = useCallback(
     (next: Place) => {
       if (next === place) return;
-      if (place === "river") savedScroll.current = window.scrollY;
+      if (place === "river") {
+        savedScroll.current = window.scrollY;
+        engineRef.current?.rush();
+      }
       setFlash(true);
       setOpenProject(null);
       window.setTimeout(() => {
         engineRef.current?.setPlace(next);
         setPlace(next);
         setService(null);
-      }, 420);
-      window.setTimeout(() => setFlash(false), 1000);
+      }, 620);
+      window.setTimeout(() => setFlash(false), 1200);
     },
     [place]
   );

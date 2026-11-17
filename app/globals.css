@@ -83,6 +83,14 @@ textarea {
   padding: 14px 18px;
   z-index: 5;
 }
+/* on the intro screen the language switch stays reachable above the overlay;
+   sound is chosen by the two intro buttons, so its toggle waits until you are in */
+.xp:not(.is-in) .xp-top {
+  z-index: 10;
+}
+.xp:not(.is-in) .xp-icon {
+  display: none;
+}
 .xp-mark {
   font-family: var(--display);
   font-size: 26px;
@@ -551,15 +559,18 @@ html[lang="en"] .xp h2 {
   background: radial-gradient(circle at 50% 55%, #fff6df 0%, #f0c874 30%, #f2893a 60%, #07061a 100%);
 }
 .xp-flash.on {
-  animation: flash 1s ease forwards;
+  animation: flash 1.2s ease-in forwards;
 }
 @keyframes flash {
   0% {
     opacity: 0;
     transform: scale(0.6);
   }
-  40%,
-  55% {
+  28% {
+    opacity: 0.1;
+  }
+  50%,
+  60% {
     opacity: 1;
     transform: scale(1.6);
   }
@@ -577,7 +588,7 @@ html[lang="en"] .xp h2 {
 }
 @media (prefers-reduced-motion: reduce) {
   .xp-flash.on {
-    animation-duration: 0.5s;
+    animation-duration: 1.2s;
   }
   .xp-hero,
   .xp-gate {

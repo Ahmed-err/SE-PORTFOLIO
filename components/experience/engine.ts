@@ -13,6 +13,8 @@ export interface EngineCallbacks {
 export interface Engine {
   setPlace: (p: Place) => void;
   setProgress: (p: number) => void;
+  /** surge forward through the gate ahead; call just before leaving the river */
+  rush: () => void;
   setTime: (d: number) => void;
   stepGallery: (dir: number) => void;
   enableAudio: () => void;
@@ -115,11 +117,35 @@ function waterMaterial() {
     uniforms,
     vertexShader:
       "varying vec2 u;varying float d;void main(){u=uv;vec4 m=modelViewMatrix*vec4(position,1.0);d=-m.z;gl_Position=projectionMatrix*m;}",
-    fragmentShader:
-      "uniform float t;uniform float fogFar;uniform vec3 sun;uniform vec3 deep;uniform vec3 fogc;varying vec2 u;varying float d;" +
-      "void main(){float w=sin(u.y*2400.0+t*1.6+sin(u.x*60.0+t)*1.2)*0.5+0.5;float c=1.0-abs(u.x-0.5)*7.0;" +
-      "float s=pow(clamp(c+w*0.35,0.0,1.0),2.2)*(0.35+0.65*w);vec3 col=deep+sun*s*0.55;" +
-      "float f=smoothstep(25.0,fogFar,d);gl_FragColor=vec4(mix(col,fogc,f),1.0);\n#include <colorspace_fragment>\n}",
+    /* Water: dark body tinted by the sky, with a broken glitter path under the sun.
+       Ripples are value noise stretched along the river, so they read as long
+       soft swells in perspective instead of regular stripes. */
+    fragmentShader: `
+      uniform float t; uniform float fogFar; uniform vec3 sun; uniform vec3 deep; uniform vec3 fogc;
+      varying vec2 u; varying float d;
+      float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float n(vec2 p){
+        vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(h(i), h(i + vec2(1.0, 0.0)), f.x), mix(h(i + vec2(0.0, 1.0)), h(i + vec2(1.0, 1.0)), f.x), f.y);
+      }
+      void main(){
+        vec2 p = vec2((u.x - 0.5) * 60.0, u.y * 820.0);
+        float far = smoothstep(18.0, 130.0, d);
+        float swell = n(p * vec2(0.22, 0.9) + vec2(t * 0.12, t * 0.55));
+        float chop = n(p * vec2(0.7, 3.1) - vec2(t * 0.25, t * 1.1));
+        float fine = n(p * vec2(1.9, 8.0) + vec2(t * 0.4, t * 1.9));
+        float r = swell * 0.5 + chop * 0.33 + fine * 0.17 * (1.0 - far);
+        /* glitter: sharp glints up close, melting into a soft sheen with distance */
+        float c = clamp(1.0 - abs(u.x - 0.5) * 6.0, 0.0, 1.0);
+        float glint = smoothstep(0.58, 0.70, r);
+        float path = mix(glint, 0.35 + r * 0.5, far) * (c * c * 0.95 + c * 0.25);
+        /* sky colour picked up on the faces of the swells, everywhere on the river */
+        float face = smoothstep(0.42, 0.75, r);
+        vec3 col = deep * (0.75 + 0.5 * swell) + fogc * face * 0.16 + sun * path * 0.9;
+        float f = smoothstep(25.0, fogFar, d);
+        gl_FragColor = vec4(mix(col, fogc, f), 1.0);
+        #include <colorspace_fragment>
+      }`,
   });
   return { mat, uniforms };
 }
@@ -248,7 +274,26 @@ class Sound {
 const SCALE = [1, 1.125, 1.25, 1.5, 1.667, 2, 2.25, 2.5, 3];
 
 /* ---------------------------------------------------------------- river */
-function buildRiver(sound: Sound, state: { progress: number; tod: number; mx: number; my: number }) {
+/* Scroll is remapped so the camera eases out of one stop and into the next:
+   it lingers at the hero and at each gate, and travels fastest mid-leg. */
+const STOPS = [0, ...GATE_STOPS];
+const dwell = (p: number) => {
+  for (let i = 1; i < STOPS.length; i++) {
+    if (p <= STOPS[i] || i === STOPS.length - 1) {
+      const a = STOPS[i - 1];
+      const b = STOPS[i];
+      const u = Math.min(1, Math.max(0, (p - a) / (b - a)));
+      return a + (b - a) * (u + 0.7 * (u * u * (3 - 2 * u) - u));
+    }
+  }
+  return p;
+};
+/* smooth bump: 1 at c, 0 beyond c +/- w */
+const bump = (c: number, w: number, x: number) => sstep(0, 1, 1 - Math.abs(x - c) / w);
+const LEGS = [0.185, 0.495, 0.83];
+
+function buildRiver(sound: Sound, state: { progress: number; tod: number; mx: number; my: number; portrait: boolean; rush: number }) {
+  const calm = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const rnd = makeRnd(7);
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 1400);
@@ -460,21 +505,59 @@ function buildRiver(sound: Sound, state: { progress: number; tod: number; mx: nu
   let ly = 0;
   let prevZ = 0;
   let nowT = 0;
+  let camX = 0;
+  let roll = 0;
+  let kick = 0;
   const waves: { x: number; z: number; t: number }[] = [];
   const look = new THREE.Vector3();
 
   const update = (t: number) => {
+    /* time-based smoothing, so the camera feels the same at 30, 60 or 120 fps */
+    const dt = Math.min(0.1, Math.max(0, t - nowT));
     nowT = t;
     if (appliedTod !== state.tod) applyTime(state.tod);
     const tod = state.tod;
-    cp += (state.progress - cp) * 0.06;
-    const z = cp * END;
-    const x = pathX(z);
-    cam.position.set(x, 2.5 + Math.sin(t * 0.6) * 0.12, z);
-    lx += ((state.mx - 0.5) * 7 - lx) * 0.05;
-    ly += ((0.5 - state.my) * 3 - ly) * 0.05;
-    look.set(pathX(z - 30) + lx, 2.9 + ly, z - 30);
+    const cpBefore = cp;
+    cp += (dwell(state.progress) - cp) * (1 - Math.exp(-dt * 3.7));
+    const kLook = 1 - Math.exp(-dt * 3.1);
+
+    /* the shot, as a function of where we are on the river */
+    const open = calm ? 0 : 1 - sstep(0, 0.12, cp); // aerial opening, craning down to the water
+    const cruise = 1 - open;
+    const rise = calm ? 0 : (bump(LEGS[0], 0.14, cp) + bump(LEGS[1], 0.15, cp) + bump(LEGS[2], 0.15, cp)) * cruise;
+    const side = calm ? 0 : (bump(LEGS[0], 0.14, cp) - bump(LEGS[1], 0.15, cp) + bump(LEGS[2], 0.15, cp)) * cruise;
+    const near = calm ? 0 : bump(GATE_STOPS[0], 0.08, cp) + bump(GATE_STOPS[1], 0.08, cp) + bump(GATE_STOPS[2], 0.08, cp);
+
+    /* leaving through a gate: surge forward and widen the lens */
+    let rush = 0;
+    if (state.rush >= 0 && !calm) {
+      const r = Math.min(1, Math.max(0, (t - state.rush) / 0.62));
+      rush = r * r * r;
+    }
+
+    const z = cp * END - rush * 22;
+    const px = pathX(z);
+    const x = px + side * 3.4 * (1 - rush);
+    const y = 2.5 + open * 20 + rise * 4.2 - near * 0.9 + Math.sin(t * 0.6) * 0.12;
+    cam.position.set(x, y, z);
+    lx += ((state.mx - 0.5) * 7 - lx) * kLook;
+    ly += ((0.5 - state.my) * 3 - ly) * kLook;
+    /* pitch: down from the air, slightly down on the rises, up at the gates so they tower */
+    const pitch = 0.4 - open * 7.9 - rise * 4.4 + near * 1.7;
+    look.set(pathX(z - 30) - side * 1.6 + lx, y + pitch + ly, z - 30);
     cam.lookAt(look);
+    /* bank into sideways movement, and open the lens a little with speed */
+    const vx = dt > 0 ? (x - camX) / dt : 0;
+    camX = x;
+    roll += (Math.max(-0.07, Math.min(0.07, -vx * 0.035)) - roll) * kLook;
+    if (!calm) cam.rotateZ(roll);
+    const speed = dt > 0 ? Math.abs(cp - cpBefore) * -END / dt : 0;
+    kick += (Math.min(9, speed * 0.22) - kick) * kLook;
+    const fov = (state.portrait ? 78 : 60) + (calm ? 0 : kick - near * 4) + rush * 30;
+    if (Math.abs(cam.fov - fov) > 0.01) {
+      cam.fov = fov;
+      cam.updateProjectionMatrix();
+    }
     sky.mesh.position.copy(cam.position);
     stars.position.copy(cam.position);
     stars.rotation.y = t * 0.004;
@@ -493,7 +576,10 @@ function buildRiver(sound: Sound, state: { progress: number; tod: number; mx: nu
     prevZ = z;
     while (waves.length && t - waves[0].t > 5) waves.shift();
     const fin = sstep(0.92, 1, cp);
-    const bz = z - 24 + cp * 14;
+    /* the boat starts far ahead and we catch up as we descend; it leads us through a gate */
+    const lead = 24 - cp * 14;
+    /* at a gate the boat keeps clear of the title: it waits just beyond the frame */
+    const bz = z - lead - near * Math.max(0, 28 - lead) - open * 56 - rush * 6;
     const bx = pathX(bz);
     boat.position.set(bx, 0.05 + Math.sin(t * 1.3) * 0.07, bz);
     boat.rotation.z = Math.sin(t * 0.9) * 0.05;
@@ -1001,7 +1087,7 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
   }
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const sound = new Sound();
-  const state = { progress: 0, tod: 0, mx: 0.5, my: 0.5, portrait: false };
+  const state = { progress: 0, tod: 0, mx: 0.5, my: 0.5, portrait: false, rush: -1 };
   const rigs: Record<Place, PlaceRig> = {
     river: buildRiver(sound, state),
     gallery: buildGallery(sound, images, cb, state),
@@ -1077,11 +1163,15 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
   return {
     setPlace: (p) => {
       place = p;
+      state.rush = -1;
       canvas.style.touchAction = p === "river" ? "pan-y" : "none";
       sound.setRoot(roots[p]);
     },
     setProgress: (p) => {
       state.progress = p;
+    },
+    rush: () => {
+      if (place === "river") state.rush = performance.now() / 1000;
     },
     setTime: (d) => {
       state.tod = d;
