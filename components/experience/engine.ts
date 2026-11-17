@@ -546,7 +546,9 @@ function buildRiver(sound: Sound, state: { progress: number; tod: number; mx: nu
     lx += ((state.mx - 0.5) * 7 - lx) * kLook;
     ly += ((0.5 - state.my) * 3 - ly) * kLook;
     /* pitch: down from the air, slightly down on the rises, up at the gates so they tower */
-    const pitch = 0.4 - open * 7.9 - rise * 4.4 + near * 1.7;
+    /* on short windows, look up a little more at the gates so the frame clears the top bar */
+    const short = Math.min(1, Math.max(0, (760 - window.innerHeight) / 300));
+    const pitch = 0.4 - open * 7.9 - rise * 4.4 + near * (1.7 + short * 3.2);
     look.set(pathX(z - 30) - side * 1.6 + lx, y + pitch + ly, z - 30);
     cam.lookAt(look);
     /* bank into sideways movement, and open the lens a little with speed */
@@ -582,7 +584,10 @@ function buildRiver(sound: Sound, state: { progress: number; tod: number; mx: nu
     /* the boat starts far ahead and we catch up as we descend; it leads us through a gate */
     const lead = 24 - cp * 14;
     /* at a gate the boat keeps clear of the title: it waits just beyond the frame */
-    const bz = z - lead - near * Math.max(0, 28 - lead) - open * 56 - rush * 6;
+    /* far ahead under the hero name in every mode, including reduced motion */
+    const ahead = 1 - sstep(0, 0.12, cp);
+    const gateHold = bump(GATE_STOPS[0], 0.08, cp) + bump(GATE_STOPS[1], 0.08, cp) + bump(GATE_STOPS[2], 0.08, cp);
+    const bz = z - lead - gateHold * Math.max(0, 28 - lead) - ahead * 56 - rush * 6;
     const bx = pathX(bz);
     boat.position.set(bx, 0.05 + Math.sin(t * 1.3) * 0.07, bz);
     boat.rotation.z = Math.sin(t * 0.9) * 0.05;
@@ -885,12 +890,23 @@ function buildSky(sound: Sound, count: number, cb: EngineCallbacks) {
       const w = window.innerWidth;
       const h = window.innerHeight;
       const drop = (h / (2 * Math.tan((cam.fov * Math.PI) / 360))) * (4.2 / 46);
+      /* labels give way to the text panel at the bottom of the screen */
+      const panel = document.querySelector(".xp-sky");
+      const panelTop = panel ? panel.getBoundingClientRect().top : h;
+      const panelHalf = Math.min(w / 2, 300);
       for (let i = 0; i < labels.length && i < pts.length; i++) {
         proj.copy(pts[i]).project(cam);
-        const on = proj.z < 1 && Math.abs(proj.x) < 1.15 && Math.abs(proj.y) < 1.1;
+        /* shown while the star itself is on screen, and kept whole at the edges */
+        const on = proj.z < 1 && Math.abs(proj.x) < 1.02 && Math.abs(proj.y) < 1.1;
         const el = labels[i];
         el.style.visibility = on ? "visible" : "hidden";
-        if (on) el.style.transform = `translate(${((proj.x + 1) / 2) * w}px, ${((1 - proj.y) / 2) * h + drop}px) translate(-50%, 0)`;
+        if (on) {
+          const half = el.offsetWidth / 2 + 8;
+          const x = Math.min(w - half, Math.max(half, ((proj.x + 1) / 2) * w));
+          const y = ((1 - proj.y) / 2) * h + drop;
+          if (y + el.offsetHeight > panelTop && Math.abs(x - w / 2) < panelHalf + half) el.style.visibility = "hidden";
+          else el.style.transform = `translate(${x}px, ${y}px) translate(-50%, 0)`;
+        }
       }
     }
     halos.forEach((h, i) => {
@@ -1136,10 +1152,13 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
   let place: Place = "river";
   const roots: Record<Place, number> = { river: 73.42, gallery: 82.41, sky: 98, majlis: 65.41 };
 
+  /* render quality: starts at the screen's own density and steps down, once and
+     for good, on machines that cannot hold a smooth frame rate */
+  let quality = 2;
   const resize = () => {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setPixelRatio(Math.min(quality, window.devicePixelRatio || 1));
     renderer.setSize(w, h, false);
     state.portrait = w < h;
     (Object.keys(rigs) as Place[]).forEach((k) => {
@@ -1191,7 +1210,27 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
   canvas.addEventListener("pointercancel", onCancel);
 
   let raf = 0;
+  let lastMs = 0;
+  let slow = 0;
+  let counted = 0;
   const frame = (ms: number) => {
+    const gap = ms - lastMs;
+    lastMs = ms;
+    if (gap > 0 && gap < 250) {
+      /* judge every 60 frames; long gaps (tab switches) are ignored */
+      counted++;
+      slow += gap;
+      if (counted >= 60) {
+        const current = Math.min(quality, window.devicePixelRatio || 1);
+        /* averaging under about 45 frames a second: drop the resolution a step */
+        if (slow / counted > 22 && current > 0.7) {
+          quality = Math.max(0.7, current * 0.8);
+          resize();
+        }
+        counted = 0;
+        slow = 0;
+      }
+    }
     const rig = rigs[place];
     rig.update(ms / 1000);
     renderer.render(rig.scene, rig.camera);

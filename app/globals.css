@@ -578,9 +578,40 @@ html[lang="en"] .xp h2 {
   .xp-sheet-wrap {
     align-items: center;
   }
+  /* wide screens: screenshot on one side, the story beside it */
   .xp-sheet {
+    width: min(1040px, 92vw);
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    column-gap: 30px;
+    align-content: start;
+    padding: 28px;
     border-bottom: 1px solid var(--line);
     border-radius: 22px;
+  }
+  .xp-sheet > :not(.xp-close):not(img) {
+    grid-column: 2;
+  }
+  .xp-sheet > img {
+    grid-column: 1;
+    grid-row: 1 / span 12;
+    align-self: start;
+    position: sticky;
+    top: 0;
+    margin-bottom: 0;
+  }
+  .xp-sheet > a.btn {
+    justify-self: start;
+  }
+  .xp-sheet > h2 {
+    font-size: clamp(28px, 2.7vw, 40px);
+    line-height: 1.15;
+    margin-top: 0;
+    padding-inline-end: 52px;
+  }
+  .xp-close {
+    top: 20px;
+    inset-inline-end: 20px;
   }
 }
 
