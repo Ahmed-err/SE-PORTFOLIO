@@ -6,21 +6,43 @@ import { createEngine, GATE_STOPS, type Engine, type Place } from "./engine";
 
 const PLACES: Place[] = ["river", "gallery", "sky", "majlis"];
 const GATE_PLACE: Place[] = ["gallery", "sky", "majlis"];
+const STOP_AT = [0, ...GATE_STOPS];
 
 type SendState = "idle" | "sending" | "sent" | "error";
+
+const host = (url: string) => {
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
+
+function Arrow({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" className={`xp-arrow ${flip ? "flip" : ""}`}>
+      <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export default function Experience() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const savedScroll = useRef(0);
   const starsRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const lastHover = useRef<Element | null>(null);
 
   const [lang, setLang] = useState<Lang>("ar");
   const [entered, setEntered] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [place, setPlace] = useState<Place>("river");
+  const [moving, setMoving] = useState(false);
   const [stop, setStop] = useState(0); // 0 hero, 1..3 gates, -1 between
   const [muted, setMuted] = useState(true);
-  const [flash, setFlash] = useState(false);
   const [noGl, setNoGl] = useState(false);
   const [focus, setFocus] = useState(0);
   const [openProject, setOpenProject] = useState<number | null>(null);
@@ -41,6 +63,7 @@ export default function Experience() {
         onFocusProject: setFocus,
         onOpenProject: setOpenProject,
         onService: setService,
+        onHot: (h) => cursorRef.current?.classList.toggle("hot", h),
       }
     );
     if (!engine) {
@@ -73,6 +96,56 @@ export default function Experience() {
     }
   }, [lang]);
 
+  /* the cursor: a dot on the pointer and a ring that follows it */
+  useEffect(() => {
+    const el = cursorRef.current;
+    if (!el || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    document.documentElement.classList.add("has-cursor");
+    const ring = el.querySelector<HTMLElement>(".ring")!;
+    const dot = el.querySelector<HTMLElement>(".dot")!;
+    let x = -100;
+    let y = -100;
+    let tx = -100;
+    let ty = -100;
+    let raf = 0;
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      tx = e.clientX;
+      ty = e.clientY;
+      if (x < -50) {
+        x = tx;
+        y = ty;
+      }
+      el.classList.add("on");
+      const target = e.target as Element;
+      el.classList.toggle("link", !!target.closest?.("button, a, label.xp-time"));
+      el.classList.toggle("text", !!target.closest?.("input:not([type=range]), textarea"));
+    };
+    const leave = () => el.classList.remove("on");
+    const press = () => el.classList.add("down");
+    const release = () => el.classList.remove("down");
+    const loop = () => {
+      x += (tx - x) * 0.2;
+      y += (ty - y) * 0.2;
+      ring.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      dot.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    window.addEventListener("pointermove", move);
+    document.addEventListener("pointerleave", leave);
+    window.addEventListener("pointerdown", press);
+    window.addEventListener("pointerup", release);
+    return () => {
+      cancelAnimationFrame(raf);
+      document.documentElement.classList.remove("has-cursor");
+      window.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerleave", leave);
+      window.removeEventListener("pointerdown", press);
+      window.removeEventListener("pointerup", release);
+    };
+  }, []);
+
   /* scroll drives the river */
   useEffect(() => {
     if (place !== "river") return;
@@ -82,6 +155,7 @@ export default function Experience() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       engineRef.current?.setProgress(p);
+      railRef.current?.style.setProperty("--p", p.toFixed(4));
       let s = -1;
       if (p < 0.07) s = 0;
       GATE_STOPS.forEach((g, i) => {
@@ -98,7 +172,7 @@ export default function Experience() {
       window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [place]);
+  }, [place, entered]);
 
   useLayoutEffect(() => {
     document.body.style.overflow = place === "river" && entered ? "" : "hidden";
@@ -107,22 +181,29 @@ export default function Experience() {
 
   const go = useCallback(
     (next: Place) => {
-      if (next === place) return;
+      if (next === place || moving) return;
       if (place === "river") {
         savedScroll.current = window.scrollY;
         engineRef.current?.rush();
       }
-      setFlash(true);
+      engineRef.current?.flash();
+      setMoving(true);
       setOpenProject(null);
       window.setTimeout(() => {
         engineRef.current?.setPlace(next);
         setPlace(next);
         setService(null);
-      }, 620);
-      window.setTimeout(() => setFlash(false), 1200);
+      }, 640);
+      window.setTimeout(() => setMoving(false), 1150);
     },
-    [place]
+    [place, moving]
   );
+
+  const toStop = (i: number) => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: STOP_AT[i] * max, behavior: calm ? "auto" : "smooth" });
+  };
 
   const enter = (withSound: boolean) => {
     if (withSound) {
@@ -130,7 +211,9 @@ export default function Experience() {
       engineRef.current?.setMuted(false);
       setMuted(false);
     }
-    setEntered(true);
+    setLeaving(true);
+    engineRef.current?.begin();
+    window.setTimeout(() => setEntered(true), 700);
   };
   const toggleSound = () => {
     const next = !muted;
@@ -147,15 +230,40 @@ export default function Experience() {
     return () => engine?.setStarLabels([]);
   }, [place]);
 
-  /* close the project sheet with Escape */
+  /* the project sheet: Escape closes it, focus moves into it */
   useEffect(() => {
     if (openProject === null) return;
+    closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpenProject(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [openProject]);
+
+  /* arrow keys turn the gallery */
+  useEffect(() => {
+    if (place !== "gallery" || openProject !== null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const right = e.key === "ArrowRight";
+      engineRef.current?.stepGallery(right === (lang === "en") ? 1 : -1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [place, openProject, lang]);
+
+  /* quiet sounds under the interface */
+  const onOver = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    const el = (e.target as Element).closest("button, a");
+    if (el && el !== lastHover.current) engineRef.current?.sfx("hover");
+    lastHover.current = el;
+  };
+  const onTap = (e: React.MouseEvent) => {
+    const el = (e.target as Element).closest("button, a");
+    if (el && !el.hasAttribute("data-quiet")) engineRef.current?.sfx("tap");
+  };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -181,74 +289,116 @@ export default function Experience() {
   const gate = stop >= 1 ? t.gates[stop - 1] : null;
 
   return (
-    <div className={`xp place-${place} ${entered ? "is-in" : ""}`}>
+    <div
+      className={`xp place-${place} ${entered ? "is-in" : ""} ${moving ? "is-moving" : ""}`}
+      onPointerOver={onOver}
+      onClickCapture={onTap}
+    >
       <canvas ref={canvasRef} className="xp-canvas" aria-hidden="true" />
       <div className="xp-shade" />
 
       {noGl && <p className="xp-nogl">{t.noWebgl}</p>}
 
       <header className="xp-top">
-        {place === "river" ? (
-          <span className="xp-mark">{lang === "ar" ? "أ ي" : "AY"}</span>
-        ) : (
-          <button type="button" className="xp-back" onClick={() => go("river")}>
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" className="xp-arrow">
-              <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            {t.back}
-          </button>
+        <div className="xp-lead">
+          <span className="xp-mark" aria-hidden="true">
+            {lang === "ar" ? "أ ي" : "AY"}
+          </span>
+          {place !== "river" && entered && (
+            <button type="button" className="xp-back" onClick={() => go("river")}>
+              <Arrow />
+              <span className="label">{t.back}</span>
+            </button>
+          )}
+        </div>
+
+        {entered && (
+          <nav className="xp-places" aria-label={t.journey} style={{ "--i": PLACES.indexOf(place) } as React.CSSProperties}>
+            {PLACES.map((p) => (
+              <button key={p} type="button" className={p === place ? "on" : ""} aria-current={p === place ? "page" : undefined} onClick={() => go(p)}>
+                {t.places[p]}
+              </button>
+            ))}
+          </nav>
         )}
+
         <div className="xp-tools">
-          <button type="button" className="xp-icon" onClick={toggleSound} aria-label={muted ? t.soundOn : t.soundOff} aria-pressed={!muted}>
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-              <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />
-              {muted ? (
-                <path d="M16 9.5l5 5m0-5l-5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              ) : (
-                <path d="M15.5 9a4.2 4.2 0 010 6M18 6.5a7.6 7.6 0 010 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              )}
-            </svg>
+          <button type="button" className={`xp-icon xp-sound ${muted ? "" : "playing"}`} onClick={toggleSound} aria-label={muted ? t.soundOn : t.soundOff} aria-pressed={!muted} data-quiet>
+            <span />
+            <span />
+            <span />
+            <span />
           </button>
-          <button type="button" className="xp-lang" onClick={() => setLang(lang === "ar" ? "en" : "ar")}>
+          <button type="button" className="xp-lang" onClick={() => setLang(lang === "ar" ? "en" : "ar")} lang={lang === "ar" ? "en" : "ar"}>
             {t.lang}
           </button>
         </div>
       </header>
 
-      {entered && (
-        <nav className="xp-places" aria-label={t.places.river}>
-          {PLACES.map((p) => (
-            <button key={p} type="button" className={p === place ? "on" : ""} aria-current={p === place ? "page" : undefined} onClick={() => go(p)}>
-              {t.places[p]}
-            </button>
-          ))}
-        </nav>
-      )}
-
       {/* river */}
       {place === "river" && entered && (
         <>
           <section className={`xp-hero ${stop === 0 ? "show" : ""}`} aria-hidden={stop !== 0}>
-            <h1>{t.name}</h1>
-            <p className="xp-role">{t.role}</p>
-            <p className="xp-tagline">{t.tagline}</p>
-            <p className="xp-hint">{t.hint}</p>
+            <h1 style={{ "--i": 0 } as React.CSSProperties}>{t.name}</h1>
+            <p className="xp-role" style={{ "--i": 1 } as React.CSSProperties}>
+              {t.role}
+            </p>
+            <p className="xp-tagline" style={{ "--i": 2 } as React.CSSProperties}>
+              {t.tagline}
+            </p>
+            <p className="xp-hint" style={{ "--i": 3 } as React.CSSProperties}>
+              <span className="xp-cue" aria-hidden="true" />
+              {t.hint}
+            </p>
           </section>
           <section className={`xp-gate ${gate ? "show" : ""}`} aria-hidden={!gate}>
             {gate && (
               <>
-                <h2>{gate.name}</h2>
-                <p>{gate.line}</p>
-                <button type="button" className="btn primary" onClick={() => go(GATE_PLACE[stop - 1])}>
+                <h2 style={{ "--i": 0 } as React.CSSProperties}>{gate.name}</h2>
+                <p style={{ "--i": 1 } as React.CSSProperties}>{gate.line}</p>
+                <button type="button" className="btn primary" style={{ "--i": 2 } as React.CSSProperties} onClick={() => go(GATE_PLACE[stop - 1])} tabIndex={gate ? 0 : -1}>
                   {gate.enter}
+                  <Arrow flip />
                 </button>
               </>
             )}
           </section>
+
+          <nav className="xp-rail" ref={railRef} aria-label={t.journey}>
+            <span className="xp-rail-track" aria-hidden="true">
+              <span className="xp-rail-fill" />
+            </span>
+            {STOP_AT.map((at, i) => (
+              <button key={i} type="button" className={stop === i ? "on" : ""} style={{ "--at": at } as React.CSSProperties} onClick={() => toStop(i)} aria-current={stop === i ? "step" : undefined}>
+                <span>{i === 0 ? t.places.river : t.gates[i - 1].name}</span>
+              </button>
+            ))}
+          </nav>
+
           <label className="xp-time">
-            <span>{t.dusk}</span>
-            <input type="range" min={0} max={100} defaultValue={0} aria-label={t.timeLabel} onInput={(e) => engineRef.current?.setTime(Number(e.currentTarget.value) / 100)} />
-            <span>{t.night}</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" className="sun">
+              <circle cx="12" cy="12" r="4.2" fill="currentColor" />
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+                <path key={a} d="M12 2.5v2.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" transform={`rotate(${a} 12 12)`} />
+              ))}
+            </svg>
+            <span className="sr">{t.dusk}</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              defaultValue={0}
+              aria-label={t.timeLabel}
+              onInput={(e) => {
+                const v = Number(e.currentTarget.value) / 100;
+                engineRef.current?.setTime(v);
+                e.currentTarget.style.setProperty("--v", String(v));
+              }}
+            />
+            <span className="sr">{t.night}</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" className="moon">
+              <path d="M19.5 14.6A8 8 0 019.4 4.5a8 8 0 1010.1 10.1z" fill="currentColor" />
+            </svg>
           </label>
           <div className="xp-spacer" />
         </>
@@ -256,23 +406,22 @@ export default function Experience() {
 
       {/* gallery */}
       {place === "gallery" && (
-        <section className="xp-panel xp-gallery">
+        <section className="xp-panel xp-gallery" key={`g${focus}`}>
           <p className="xp-hint">{t.galleryHint}</p>
           <h2>{focused.title}</h2>
+          <p className="xp-host" dir="ltr">
+            {host(focused.url)}
+          </p>
           <p className="xp-clamp">{focused.desc}</p>
           <div className="xp-row">
             <button type="button" className="btn round" onClick={() => engineRef.current?.stepGallery(-1)} aria-label={t.prev}>
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" className="xp-arrow">
-                <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Arrow />
             </button>
             <button type="button" className="btn primary" onClick={() => setOpenProject(focus)}>
               {t.open}
             </button>
             <button type="button" className="btn round" onClick={() => engineRef.current?.stepGallery(1)} aria-label={t.next}>
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" className="xp-arrow flip">
-                <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Arrow flip />
             </button>
           </div>
         </section>
@@ -281,28 +430,42 @@ export default function Experience() {
       {project && (
         <div className="xp-sheet-wrap" onClick={() => setOpenProject(null)}>
           <article className="xp-sheet" role="dialog" aria-modal="true" aria-label={project.title} onClick={(e) => e.stopPropagation()}>
-            <button type="button" className="xp-close" onClick={() => setOpenProject(null)} aria-label={t.close}>
+            <button type="button" className="xp-close" onClick={() => setOpenProject(null)} aria-label={t.close} ref={closeRef}>
               <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
             </button>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={project.img} alt="" />
-            <h2>{project.title}</h2>
-            <p>{project.desc}</p>
-            <h3>{t.challenge}</h3>
-            <p>{project.challenge}</p>
-            <h3>{t.solution}</h3>
-            <p>{project.solution}</p>
-            <h3>{t.built}</h3>
-            <ul>
-              {project.features.map((f) => (
-                <li key={f}>{f}</li>
-              ))}
-            </ul>
-            <a className="btn primary" href={project.url} target="_blank" rel="noreferrer">
-              {t.visit}
-            </a>
+            <figure className="xp-sheet-media">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={project.img} alt={project.title} />
+            </figure>
+            <div className="xp-sheet-body">
+              <h2>{project.title}</h2>
+              <a className="xp-host" href={project.url} target="_blank" rel="noreferrer" dir="ltr">
+                {host(project.url)}
+              </a>
+              <p className="xp-lede">{project.desc}</p>
+              <div className="xp-sheet-cols">
+                <section>
+                  <h3>{t.challenge}</h3>
+                  <p>{project.challenge}</p>
+                </section>
+                <section>
+                  <h3>{t.solution}</h3>
+                  <p>{project.solution}</p>
+                </section>
+              </div>
+              <h3>{t.built}</h3>
+              <ul>
+                {project.features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
+              <a className="btn primary" href={project.url} target="_blank" rel="noreferrer">
+                {t.visit}
+                <Arrow flip />
+              </a>
+            </div>
           </article>
         </div>
       )}
@@ -311,22 +474,24 @@ export default function Experience() {
       {place === "sky" && (
         <div className="xp-stars" ref={starsRef}>
           {t.services.map((s, i) => (
-            <button key={i} type="button" className={i === service ? "on" : ""} aria-pressed={i === service} onClick={() => engineRef.current?.selectService(i)}>
+            <button key={i} type="button" className={i === service ? "on" : ""} aria-pressed={i === service} onClick={() => engineRef.current?.selectService(i)} data-quiet>
               {s.title}
             </button>
           ))}
         </div>
       )}
       {place === "sky" && (
-        <section className="xp-panel xp-sky" aria-live="polite">
+        <section className="xp-panel xp-sky" aria-live="polite" key={`s${service}`}>
           {service === null ? (
             <>
               <p className="xp-hint">{t.skyHint}</p>
               <h2>{t.gates[1].name}</h2>
               <p className="xp-sub">{t.skills}</p>
               <ul className="xp-chips">
-                {skills.map((s) => (
-                  <li key={s}>{s}</li>
+                {skills.map((s, i) => (
+                  <li key={s} style={{ "--i": i } as React.CSSProperties}>
+                    {s}
+                  </li>
                 ))}
               </ul>
             </>
@@ -336,6 +501,7 @@ export default function Experience() {
               <p>{t.services[service].desc}</p>
               <button type="button" className="btn ghost" onClick={() => go("majlis")}>
                 {t.gates[2].enter}
+                <Arrow flip />
               </button>
             </>
           )}
@@ -360,19 +526,19 @@ export default function Experience() {
               <span>{t.contact.message}</span>
               <textarea name="message" rows={2} required />
             </label>
-            <button type="submit" className="btn primary" disabled={send === "sending"}>
-              {send === "sending" ? t.contact.sending : t.contact.send}
+            <button type="submit" className={`btn primary ${send}`} disabled={send === "sending"}>
+              {send === "sending" ? t.contact.sending : send === "sent" ? t.contact.sent : t.contact.send}
             </button>
             <p className="xp-status" role="status">
-              {send === "sent" ? t.contact.sent : send === "error" ? t.contact.error : ""}
+              {send === "error" ? t.contact.error : ""}
             </p>
           </form>
           <div className="xp-links">
             <a href={contactInfo.whatsappLink} target="_blank" rel="noreferrer">
-              {t.whatsapp} <bdi dir="ltr">{contactInfo.whatsapp}</bdi>
+              <span>{t.whatsapp}</span> <bdi dir="ltr">{contactInfo.whatsapp}</bdi>
             </a>
             <a href={`mailto:${contactInfo.email}`}>
-              {t.mail} <bdi dir="ltr">{contactInfo.email}</bdi>
+              <span>{t.mail}</span> <bdi dir="ltr">{contactInfo.email}</bdi>
             </a>
           </div>
         </section>
@@ -380,22 +546,33 @@ export default function Experience() {
 
       {/* intro */}
       {!entered && (
-        <div className="xp-intro">
+        <div className={`xp-intro ${leaving ? "leaving" : ""}`}>
           <h1>{t.name}</h1>
           <p className="xp-tagline">{t.tagline}</p>
           <p className="xp-note">{t.introNote}</p>
           <div className="xp-row">
-            <button type="button" className="btn primary" onClick={() => enter(true)}>
+            <button type="button" className="btn primary" onClick={() => enter(true)} disabled={leaving}>
               {t.introSound}
             </button>
-            <button type="button" className="btn ghost" onClick={() => enter(false)}>
+            <button type="button" className="btn ghost" onClick={() => enter(false)} disabled={leaving}>
               {t.introSilent}
             </button>
           </div>
+          <p className="xp-phones">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="3" y="13.5" width="4" height="6.5" rx="1.6" fill="currentColor" />
+              <rect x="17" y="13.5" width="4" height="6.5" rx="1.6" fill="currentColor" />
+            </svg>
+            {t.headphones}
+          </p>
         </div>
       )}
 
-      <div className={`xp-flash ${flash ? "on" : ""}`} aria-hidden="true" />
+      <div className="xp-cursor" ref={cursorRef} aria-hidden="true">
+        <span className="ring" />
+        <span className="dot" />
+      </div>
     </div>
   );
 }

@@ -1,13 +1,18 @@
 import type { Metadata, Viewport } from "next";
+import { Aref_Ruqaa, Cormorant_Garamond, IBM_Plex_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+/* self-hosted by Next: no third-party request, no layout shift */
+const ruqaa = Aref_Ruqaa({ weight: ["400", "700"], subsets: ["arabic", "latin"], variable: "--f-ruqaa", display: "swap" });
+const cormorant = Cormorant_Garamond({ weight: ["400", "500", "600"], style: ["normal", "italic"], subsets: ["latin"], variable: "--f-cormorant", display: "swap" });
+const plex = IBM_Plex_Sans_Arabic({ weight: ["300", "400", "500", "600"], subsets: ["arabic", "latin"], variable: "--f-plex", display: "swap" });
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "أحمد يوسف | مهندس برمجيات",
-  description:
-    "من ضفاف النيل إلى العالم. مواقع ومتاجر وأنظمة أعمال يبنيها أحمد يوسف، مؤسس سرمدكس.",
+  description: "من ضفاف النيل إلى العالم. مواقع ومتاجر وأنظمة أعمال يبنيها أحمد يوسف، مؤسس سرمدكس.",
   openGraph: {
     title: "أحمد يوسف | Ahmed Yousif",
     description: "From the banks of the Nile to the world. Websites, stores and business systems.",
@@ -25,16 +30,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="ar" dir="rtl" suppressHydrationWarning className={`${ruqaa.variable} ${cormorant.variable} ${plex.variable}`}>
       <body>{children}</body>
     </html>
   );

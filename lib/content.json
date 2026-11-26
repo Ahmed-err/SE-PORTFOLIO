@@ -6,7 +6,9 @@
   "introSound": "ادخل بالصوت",
   "introSilent": "ادخل بدون صوت",
   "introNote": "رحلة ثلاثية الأبعاد على النيل",
-  "hint": "اسحب للأسفل لتبحر. المس هرماً ليغنّي، والمس الماء.",
+  "headphones": "أجمل بسماعات الرأس",
+  "journey": "مراحل الرحلة",
+  "hint": "اسحب للأسفل لتبحر. المس شجرة أو برجاً أو هرماً، والمس الماء.",
   "gates": [
    {
     "name": "المعرض",
@@ -186,7 +188,9 @@
   "introSound": "Enter with sound",
   "introSilent": "Enter without sound",
   "introNote": "A 3D journey along the Nile",
-  "hint": "Scroll down to sail. Tap a pyramid to hear it sing, and tap the water.",
+  "headphones": "Best with headphones",
+  "journey": "Journey",
+  "hint": "Scroll down to sail. Tap a tree, a tower or a pyramid, and tap the water.",
   "gates": [
    {
     "name": "The Gallery",
