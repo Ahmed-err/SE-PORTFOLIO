@@ -213,15 +213,15 @@ export function buildMajlis(renderer: THREE.WebGLRenderer, state: WorldState) {
   const moonLight = new THREE.DirectionalLight(0x9fb4ff, 0.9);
   moonLight.position.copy(MOON).multiplyScalar(50);
   scene.add(moonLight);
-  const lampLight = new THREE.PointLight(0xffa04a, 14, 18, 1.6);
+  const lampLight = new THREE.PointLight(0xffa04a, 16, 26, 1.5);
   lampLight.position.set(1.25, 0.6, 0.9);
   scene.add(lampLight);
-  const fireLight = new THREE.PointLight(0xff6a24, 6, 9, 1.8);
+  const fireLight = new THREE.PointLight(0xff6a24, 8, 16, 1.6);
   fireLight.position.set(-1.1, 0.7, -1.7);
   scene.add(fireLight);
 
   /* the bank */
-  const sandG = new THREE.PlaneGeometry(200, 60, 80, 24).rotateX(-Math.PI / 2);
+  const sandG = new THREE.PlaneGeometry(200, 60, 200, 60).rotateX(-Math.PI / 2);
   {
     const p = sandG.attributes.position;
     const c = new Float32Array(p.count * 3);
@@ -232,7 +232,10 @@ export function buildMajlis(renderer: THREE.WebGLRenderer, state: WorldState) {
       const x = p.getX(i);
       const z = p.getZ(i);
       p.setY(i, Math.sin(x * 0.3) * 0.12 + Math.cos(z * 0.4) * 0.1 + Math.max(0, z - 10) * 0.05);
-      t.copy(a).lerp(b, 0.5 + 0.5 * Math.sin(x * 1.3 + z * 0.7) * Math.cos(z * 1.1 - x * 0.4));
+      /* wind ripples, and grain so it reads as sand rather than paint */
+      const rip = 0.5 + 0.5 * Math.sin(x * 1.3 + z * 0.7) * Math.cos(z * 1.1 - x * 0.4);
+      const grain = Math.sin(x * 12.9898 + z * 78.233) * 43758.5453;
+      t.copy(a).lerp(b, rip * 0.8 + (grain - Math.floor(grain)) * 0.2).multiplyScalar(0.92 + 0.08 * Math.sin(z * 2.3 + x * 0.5));
       c.set([t.r, t.g, t.b], i * 3);
     }
     sandG.setAttribute("color", new THREE.BufferAttribute(c, 3));
@@ -547,11 +550,11 @@ export function buildMajlis(renderer: THREE.WebGLRenderer, state: WorldState) {
       else cam.clearViewOffset();
     }
     const flick = Math.sin(t * 9) * 0.6 + Math.sin(t * 23.7) * 0.4 + Math.sin(t * 3.1) * 0.5;
-    lampLight.intensity = 14 + flick * 1.4;
+    lampLight.intensity = 16 + flick * 1.6;
     flame.scale.set(0.18 + flick * 0.01, 0.3 + flick * 0.03, 1);
     halo.material.opacity = 0.85 + flick * 0.06;
     const fk = Math.sin(t * 7.3) * 0.5 + Math.sin(t * 17.1) * 0.5;
-    fireLight.intensity = 6 + fk * 1.8;
+    fireLight.intensity = 8 + fk * 2.2;
     coalM.emissiveIntensity = 2.2 + fk * 0.5;
 
     const pos = embers.geometry.attributes.position;

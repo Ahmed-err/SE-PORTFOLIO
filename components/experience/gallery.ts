@@ -8,7 +8,7 @@ import { Reflector } from "three/examples/jsm/objects/Reflector.js";
 import type { Sound } from "./audio";
 import type { EngineCallbacks } from "./engine";
 import { makeEnvironment, shaftMaterial, softPoints, stoneMaterial } from "./materials";
-import { damp, glowTexture, makeRnd, NOISE_GLSL, type Grade, type PlaceRig, type WorldState } from "./util";
+import { canvasTexture, damp, glowTexture, makeRnd, NOISE_GLSL, type Grade, type PlaceRig, type WorldState } from "./util";
 
 const BG = 0x050408;
 
@@ -151,6 +151,23 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
     });
   const bezel = new THREE.MeshStandardMaterial({ color: 0x0e0c14, metalness: 0.35, roughness: 0.45, envMapIntensity: 1 });
   const hairline = new THREE.MeshBasicMaterial({ color: new THREE.Color(0xe8c48a).multiplyScalar(0.6) });
+  const sheenM = new THREE.MeshBasicMaterial({
+    map: canvasTexture(256, 160, (c) => {
+      const gr = c.createLinearGradient(0, 0, 256, 160);
+      gr.addColorStop(0, "rgba(255,240,220,0.0)");
+      gr.addColorStop(0.32, "rgba(255,240,220,0.0)");
+      gr.addColorStop(0.4, "rgba(255,240,220,0.55)");
+      gr.addColorStop(0.5, "rgba(255,240,220,0.12)");
+      gr.addColorStop(0.58, "rgba(255,240,220,0.3)");
+      gr.addColorStop(0.66, "rgba(255,240,220,0.0)");
+      c.fillStyle = gr;
+      c.fillRect(0, 0, 256, 160);
+    }),
+    transparent: true,
+    opacity: 0.09,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
   const screenMat = () => new THREE.MeshBasicMaterial({ color: 0x15131f });
   const glass = new THREE.MeshStandardMaterial({ color: 0x0b0a10, metalness: 0.7, roughness: 0.22, envMapIntensity: 1.4 });
   const plinthM = stoneMaterial(0x2e251c, { course: 0.45, roughness: 0.55 });
@@ -218,7 +235,10 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
       const backM = new THREE.MeshBasicMaterial({ map: glow, color: new THREE.Color(0xffb46a), transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, depthWrite: false });
       const back = new THREE.Mesh(new THREE.PlaneGeometry(W * 1.9, H * 2.1), backM);
       back.position.z = -0.12;
-      g.add(back, panel, line, pic);
+      /* a faint diagonal sheen: the picture sits behind glass */
+      const sheen = new THREE.Mesh(new THREE.PlaneGeometry(W, H), sheenM);
+      sheen.position.z = 0.056;
+      g.add(back, panel, line, pic, sheen);
       pics.push(pic);
       screens.push(picM);
       fr.back = backM;

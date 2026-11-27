@@ -48,7 +48,8 @@ export function buildSky(sound: Sound, count: number, cb: EngineCallbacks, state
   scene.add(ground);
   const pg = new THREE.CylinderGeometry(0.12, 1, 1, 4, 1);
   pg.translate(0, 0.5, 0);
-  const sil = new THREE.MeshBasicMaterial({ color: 0x04050c });
+  /* nearer ridges darker, farther ones lifted by haze: depth at night */
+  const sil = new THREE.MeshBasicMaterial({ color: 0x03040a });
   const pyrs = new THREE.InstancedMesh(pg, sil, 52);
   const m4 = new THREE.Matrix4();
   for (let i = 0; i < 52; i++) {
@@ -61,7 +62,7 @@ export function buildSky(sound: Sound, count: number, cb: EngineCallbacks, state
   scene.add(pyrs);
   const dunes = new THREE.Mesh(
     new THREE.CylinderGeometry(300, 300, 1, 96, 1, true),
-    new THREE.MeshBasicMaterial({ color: 0x04050c, side: THREE.BackSide })
+    new THREE.MeshBasicMaterial({ color: 0x111a36, side: THREE.BackSide })
   );
   {
     const p = dunes.geometry.attributes.position;
@@ -69,6 +70,29 @@ export function buildSky(sound: Sound, count: number, cb: EngineCallbacks, state
     dunes.position.y = -1.5;
   }
   scene.add(dunes);
+
+  /* glow on the horizon: the warmth of a far town low down, the cool of
+     airglow above it, fading out before the stars */
+  {
+    const hg = new THREE.CylinderGeometry(296, 296, 70, 96, 8, true);
+    const p = hg.attributes.position;
+    const c = new Float32Array(p.count * 3);
+    const warm = new THREE.Color(0xa0523a);
+    const cool = new THREE.Color(0x1d5578);
+    const tmp = new THREE.Color();
+    for (let i = 0; i < p.count; i++) {
+      const h = (p.getY(i) + 35) / 70;
+      const az = Math.atan2(p.getZ(i), p.getX(i));
+      const town = 0.55 + 0.45 * Math.max(0, Math.cos(az - 1.9));
+      tmp.copy(warm).multiplyScalar(town).lerp(cool, Math.min(1, h * 1.6)).multiplyScalar(Math.pow(1 - h, 1.8));
+      c.set([tmp.r, tmp.g, tmp.b], i * 3);
+    }
+    hg.setAttribute("color", new THREE.BufferAttribute(c, 3));
+    const glowRing = new THREE.Mesh(hg, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    glowRing.position.y = 33;
+    glowRing.renderOrder = -1;
+    scene.add(glowRing);
+  }
 
   /* the service stars */
   const glow = glowTexture();
