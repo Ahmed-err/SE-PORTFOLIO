@@ -1,6 +1,9 @@
-/* The Gallery: real projects hung in brass frames around a dark hall with a
-   polished stone floor that holds their reflections. Drag to turn, tap to open. */
+/* The Gallery: client work hung in brass frames around a dark hall with a
+   polished stone floor that holds their reflections. Live Sarmadax products
+   stand between them on stone plinths: a glowing screen and a phone floating
+   over a pulsing brass ring. Drag to turn, tap to open. */
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { Reflector } from "three/examples/jsm/objects/Reflector.js";
 import type { Sound } from "./audio";
 import type { EngineCallbacks } from "./engine";
@@ -9,7 +12,13 @@ import { damp, glowTexture, makeRnd, NOISE_GLSL, type Grade, type PlaceRig, type
 
 const BG = 0x050408;
 
-export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images: string[], cb: EngineCallbacks, state: WorldState) {
+export interface Exhibit {
+  kind: "work" | "product" | "concepts";
+  img: string;
+  phone?: string;
+}
+
+export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibits: Exhibit[], cb: EngineCallbacks, state: WorldState) {
   const rnd = makeRnd(21);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(BG);
@@ -31,7 +40,7 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images
     box(40, 4, 0x6a7cff, 0.12, 0, -20, 30);
   });
   const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 200);
-  const n = images.length;
+  const n = exhibits.length;
   const step = (Math.PI * 2) / n;
   const R = 8.2;
   const W = 5;
@@ -109,24 +118,27 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images
   const glow = glowTexture();
   interface Frame {
     g: THREE.Group;
-    pic: THREE.Mesh;
-    picM: THREE.MeshBasicMaterial;
+    screens: THREE.MeshBasicMaterial[];
     shaft: ReturnType<typeof shaftMaterial>;
     pool: THREE.MeshBasicMaterial;
     k: number;
     a: number;
+    /* products only */
+    phone?: THREE.Group;
+    slab?: THREE.Group;
+    ring?: THREE.MeshStandardMaterial;
   }
   const frames: Frame[] = [];
-  images.forEach((src, i) => {
-    const a = i * step;
-    const g = new THREE.Group();
-    const picM = new THREE.MeshBasicMaterial({ color: 0x15131f });
+  const pics: THREE.Mesh[] = [];
+
+  /* fill a w x h surface with an image, cropped from the top like a page */
+  const loadInto = (src: string, mat: THREE.MeshBasicMaterial, w: number, h: number) =>
     loader.load(src, (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
       const img = tex.image as { width: number; height: number };
       const ar = img.width / img.height;
-      const want = W / H;
+      const want = w / h;
       if (ar > want) {
         tex.repeat.set(want / ar, 1);
         tex.offset.set((1 - want / ar) / 2, 0);
@@ -134,15 +146,75 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images
         tex.repeat.set(1, ar / want);
         tex.offset.set(0, 1 - ar / want);
       }
-      picM.map = tex;
-      picM.needsUpdate = true;
+      mat.map = tex;
+      mat.needsUpdate = true;
     });
-    const frame = new THREE.Mesh(new THREE.BoxGeometry(W + 0.42, H + 0.42, 0.16), brass);
-    const lip = new THREE.Mesh(new THREE.BoxGeometry(W + 0.12, H + 0.12, 0.17), new THREE.MeshStandardMaterial({ color: 0x0a0910, roughness: 0.9 }));
-    const pic = new THREE.Mesh(new THREE.PlaneGeometry(W, H), picM);
-    pic.position.z = 0.09;
-    pic.userData = { index: i };
-    g.add(frame, lip, pic);
+  const screenMat = () => new THREE.MeshBasicMaterial({ color: 0x15131f });
+  const glass = new THREE.MeshStandardMaterial({ color: 0x0b0a10, metalness: 0.7, roughness: 0.22, envMapIntensity: 1.4 });
+  const plinthM = stoneMaterial(0x2e251c, { course: 0.45, roughness: 0.55 });
+
+  exhibits.forEach((ex, i) => {
+    const a = i * step;
+    const g = new THREE.Group();
+    const screens: THREE.MeshBasicMaterial[] = [];
+    const fr: Partial<Frame> = {};
+
+    if (ex.kind === "product") {
+      /* the product's own screen, a slab of dark glass floating over the plinth */
+      const SW = 4.3;
+      const SH = SW / 1.6;
+      const scrM = screenMat();
+      loadInto(ex.img, scrM, SW, SH);
+      const slab = new THREE.Group();
+      const body = new THREE.Mesh(new RoundedBoxGeometry(SW + 0.16, SH + 0.16, 0.08, 3, 0.05), glass);
+      const scr = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), scrM);
+      scr.position.z = 0.045;
+      scr.userData = { index: i };
+      slab.add(body, scr);
+      slab.position.set(-0.45, 0.4, 0.3);
+      slab.rotation.y = 0.1;
+      g.add(slab);
+      pics.push(scr);
+      screens.push(scrM);
+
+      /* and the phone, in front, turning slowly as if held up to show you */
+      const PW = 0.86;
+      const PH = (PW * 844) / 390;
+      const phM = screenMat();
+      loadInto(ex.phone ?? ex.img, phM, PW, PH);
+      const phone = new THREE.Group();
+      const shell = new THREE.Mesh(new RoundedBoxGeometry(PW + 0.1, PH + 0.12, 0.09, 4, 0.08), glass);
+      const ph = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), phM);
+      ph.position.z = 0.047;
+      ph.userData = { index: i };
+      phone.add(shell, ph);
+      phone.position.set(1.85, -0.3, 1.3);
+      g.add(phone);
+      pics.push(ph);
+      screens.push(phM);
+
+      /* the plinth and its brass ring, which pulses: this one is live */
+      const plinth = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.7, 0.9, 48), plinthM);
+      plinth.position.set(0.3, -Y + 0.45, 0.9);
+      const ring = new THREE.MeshStandardMaterial({ color: 0x3a2a10, emissive: new THREE.Color(0xffc060), emissiveIntensity: 2, metalness: 1, roughness: 0.25 });
+      const band = new THREE.Mesh(new THREE.TorusGeometry(1.56, 0.035, 10, 96), ring);
+      band.rotation.x = Math.PI / 2;
+      band.position.set(0.3, -Y + 0.91, 0.9);
+      g.add(plinth, band);
+      Object.assign(fr, { phone, slab, ring });
+    } else {
+      const picM = screenMat();
+      loadInto(ex.img, picM, W, H);
+      const frame = new THREE.Mesh(new THREE.BoxGeometry(W + 0.42, H + 0.42, 0.16), brass);
+      const lip = new THREE.Mesh(new THREE.BoxGeometry(W + 0.12, H + 0.12, 0.17), new THREE.MeshStandardMaterial({ color: 0x0a0910, roughness: 0.9 }));
+      const pic = new THREE.Mesh(new THREE.PlaneGeometry(W, H), picM);
+      pic.position.z = 0.09;
+      pic.userData = { index: i };
+      g.add(frame, lip, pic);
+      pics.push(pic);
+      screens.push(picM);
+    }
+
     const shaft = shaftMaterial(0xffd9a0, 0.4);
     const cone = new THREE.Mesh(new THREE.ConeGeometry(2.3, 7.5, 40, 1, true), shaft.mat);
     cone.position.set(0, 1.9, 0.8);
@@ -156,7 +228,7 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images
     pm.position.set(Math.sin(a) * (R - 1.3), 0.01, -Math.cos(a) * (R - 1.3));
     pm.rotation.y = -a;
     scene.add(pm);
-    frames.push({ g, pic, picM, shaft, pool, k: 0.4, a });
+    frames.push({ ...fr, g, screens, shaft, pool, k: 0.4, a });
   });
 
   /* motes drifting through the light, and a ring of small lamps overhead */
@@ -188,7 +260,6 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images
   let enterAt = -99;
   let enterPending = false;
   const look = new THREE.Vector3();
-  const pics = frames.map((f) => f.pic);
   const snap = () => {
     yawT = Math.round(yawT / step) * step;
   };
@@ -228,11 +299,19 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, images
     }
     frames.forEach((fr, i) => {
       fr.k = damp(fr.k, i === focus ? 1 : 0.34, 4, dt);
-      fr.picM.color.setScalar(fr.k);
+      for (const m of fr.screens) m.color.setScalar(fr.k);
       fr.shaft.uniforms.intensity.value = 0.04 + fr.k * 0.16;
       fr.pool.opacity = 0.12 + fr.k * 0.5;
       const push = (fr.k - 0.34) * 0.5;
       fr.g.position.set(Math.sin(fr.a) * (R - push), Y, -Math.cos(fr.a) * (R - push));
+      if (fr.phone && fr.slab && fr.ring) {
+        const still = state.calm ? 0 : 1;
+        fr.phone.position.y = -0.3 + Math.sin(t * 0.9 + i) * 0.07 * still;
+        fr.phone.rotation.y = -0.32 + Math.sin(t * 0.37 + i) * 0.14 * still;
+        fr.phone.rotation.z = Math.sin(t * 0.5 + i) * 0.025 * still;
+        fr.slab.position.y = 0.4 + Math.sin(t * 0.6 + i + 1.3) * 0.04 * still;
+        fr.ring.emissiveIntensity = (0.6 + fr.k * 1.6) * (1 + 0.45 * Math.sin(t * 2.6) * still);
+      }
     });
   };
   const hit = (ray: THREE.Raycaster) => ray.intersectObjects(pics, false)[0];

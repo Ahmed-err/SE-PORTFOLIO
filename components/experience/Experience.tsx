@@ -58,7 +58,7 @@ export default function Experience() {
     if (!canvas) return;
     const engine = createEngine(
       canvas,
-      content.ar.projects.map((p) => p.img),
+      content.ar.projects.map((p) => ({ kind: p.kind, img: p.img, phone: p.phone })),
       content.ar.services.length,
       {
         onFocusProject: setFocus,
@@ -407,6 +407,12 @@ export default function Experience() {
       {place === "gallery" && (
         <section className="xp-panel xp-gallery" key={`g${focus}`}>
           <p className="xp-hint">{t.galleryHint}</p>
+          {focused.kind === "product" && (
+            <p className="xp-live">
+              <span className="pulse" aria-hidden="true" />
+              {t.studio} · {t.live}
+            </p>
+          )}
           <h2>{focused.title}</h2>
           <p className="xp-host" dir="ltr">
             {host(focused.url)}
@@ -434,36 +440,86 @@ export default function Experience() {
                 <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
             </button>
-            <figure className="xp-sheet-media">
+            <figure className={`xp-sheet-media${project.phone ? " xp-device" : ""}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={project.img} alt={project.title} />
+              {project.phone && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img className="xp-device-phone" src={project.phone} alt="" />
+              )}
             </figure>
             <div className="xp-sheet-body">
+              {project.kind === "product" && (
+                <p className="xp-live">
+                  <span className="pulse" aria-hidden="true" />
+                  {t.studio} · {t.live}
+                </p>
+              )}
               <h2>{project.title}</h2>
               <a className="xp-host" href={project.url} target="_blank" rel="noreferrer" dir="ltr">
                 {host(project.url)}
               </a>
               <p className="xp-lede">{project.desc}</p>
-              <div className="xp-sheet-cols">
-                <section>
-                  <h3>{t.challenge}</h3>
-                  <p>{project.challenge}</p>
-                </section>
-                <section>
-                  <h3>{t.solution}</h3>
-                  <p>{project.solution}</p>
-                </section>
-              </div>
-              <h3>{t.built}</h3>
-              <ul>
-                {project.features.map((f) => (
-                  <li key={f}>{f}</li>
-                ))}
-              </ul>
-              <a className="btn primary" href={project.url} target="_blank" rel="noreferrer">
-                {t.visit}
-                <Arrow flip />
-              </a>
+              {project.kind === "product" && (
+                <dl className="xp-facts">
+                  <div>
+                    <dt>{t.forWho}</dt>
+                    <dd>{project.audience}</dd>
+                  </div>
+                  <div>
+                    <dt>{t.pricing}</dt>
+                    <dd>{project.price}</dd>
+                  </div>
+                </dl>
+              )}
+              {project.items && (
+                <ul className="xp-concepts">
+                  {project.items.map((c) => (
+                    <li key={c.key}>
+                      <a href={c.url} target="_blank" rel="noreferrer">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={c.img} alt="" loading="lazy" />
+                        <span>
+                          <strong>{c.title}</strong>
+                          <small>{c.desc}</small>
+                          <em>
+                            {t.openConcept}
+                            <Arrow flip />
+                          </em>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {project.challenge && (
+                <div className="xp-sheet-cols">
+                  <section>
+                    <h3>{t.challenge}</h3>
+                    <p>{project.challenge}</p>
+                  </section>
+                  <section>
+                    <h3>{t.solution}</h3>
+                    <p>{project.solution}</p>
+                  </section>
+                </div>
+              )}
+              {project.features.length > 0 && (
+                <>
+                  <h3>{t.built}</h3>
+                  <ul>
+                    {project.features.map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {project.kind !== "concepts" && (
+                <a className="btn primary" href={project.url} target="_blank" rel="noreferrer">
+                  {project.cta ?? t.visit}
+                  <Arrow flip />
+                </a>
+              )}
             </div>
           </article>
         </div>

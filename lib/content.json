@@ -55,79 +55,172 @@
   "timeLabel": "وقت المشهد",
   "projects": [
    {
-    "key": "electroerp",
-    "title": "ElectroPro ERP",
-    "desc": "منصة متكاملة لمستلزمات الكهرباء تجمع التجارة الإلكترونية مع ERP — مخزون، محاسبة، موارد بشرية، وإدارة طلبات في نظام واحد. متاح على himmat.store.",
-    "challenge": "كانت شركة كهربائية تقليدية تدير المخزون والمبيعات والمحاسبة والموارد البشرية والطلبات عبر جداول بيانات منفصلة ومكالمات هاتفية — مما أدى إلى أخطاء في المخزون وتأخيرات في الفواتير وخسارة في الإيرادات دون مصدر موثوق للمعلومات.",
-    "solution": "بناء منصة ERP متكاملة على Next.js وPostgreSQL تجمع جميع عمليات الأعمال في نظام واحد مع صلاحيات قائمة على الأدوار، وتتبع مخزون لحظي، ومحاسبة بقيد مزدوج، وواجهة بيع للعملاء — كل ذلك على himmat.store.",
+    "key": "himmat",
+    "kind": "work",
+    "url": "https://www.himmat.store",
+    "img": "/images/projects/himmat.webp",
+    "title": "همّت",
+    "desc": "متجر إلكتروني ونظام إدارة متكامل لمحل أدوات كهربائية في الخرطوم: أكثر من 130 منتجاً، ونقطة بيع، ومخزون، ومحاسبة، وصلاحيات لكل موظف.",
+    "challenge": "كان المحل يدير المخزون والمبيعات والحسابات في دفاتر وجداول منفصلة، فتضيع الكميات وتتأخر الفواتير، ولا يرى صاحبه صورة واحدة لعمله.",
+    "solution": "بنيت نظاماً واحداً على Next.js وPostgreSQL يجمع المتجر ونقطة البيع والمخزون والمحاسبة بالقيد المزدوج، مع صلاحيات للمدير والمحاسب وخدمة العملاء، وواجهة متجر بحركة ثلاثية الأبعاد.",
     "features": [
-     "صلاحيات حسب الأدوار للمدير والمخزن والمحاسب وفريق المبيعات",
-     "تتبع مخزون لحظي مع تنبيهات النقص وإدارة الموردين",
-     "محاسبة بقيد مزدوج مع قيود آلية وتقارير مالية",
-     "بوابة عملاء لتتبع الطلبات وإنشاء الفواتير"
-    ],
-    "url": "https://himmat.store",
-    "img": "/images/projects/electroerp.png"
+     "متجر عربي بأكثر من 130 منتجاً وتتبع للطلبات",
+     "نقطة بيع ومخزون لحظي مع تنبيهات النقص",
+     "محاسبة بالقيد المزدوج وفواتير وتقارير",
+     "أدوار للمدير والمحاسب وخدمة العملاء"
+    ]
    },
    {
-    "key": "printshop",
-    "title": "PrintCraft",
-    "desc": "منصة طباعة مخصصة مع منشئ تصميم بصري تفاعلي، وتكامل مدفوعات Paymob، وإشعارات آلية عبر واتساب ورسائل نصية وبريد إلكتروني.",
-    "challenge": "كان محل طباعة يخسر عملاءه لأن الطلبات تُؤخذ بالهاتف وملفات التصميم تُرسل يدوياً والعملاء لا يعرفون حالة طلباتهم — مما أوجد احتكاكاً في كل خطوة من خطوات البيع.",
-    "solution": "تسليم منصة تجارة إلكترونية متكاملة مع محرر تصميم داخل المتصفح يتيح للعملاء رفع الصور وإضافة النصوص ومعاينة المنتج قبل الشراء، مع تكامل Paymob وإشعارات آلية عبر واتساب ورسائل نصية وبريد إلكتروني.",
-    "features": [
-     "محرر تصميم داخل المتصفح مع معاينة حية للمنتج",
-     "بوابة Paymob مع دعم البطاقات والمحافظ الإلكترونية",
-     "إشعارات آلية عبر واتساب ورسائل نصية وبريد إلكتروني",
-     "لوحة إدارة لإدارة الطلبات والتنفيذ"
-    ],
+    "key": "harfoush",
+    "kind": "work",
     "url": "https://harfoushprint.com",
-    "img": "/images/projects/printshop.png"
+    "img": "/images/projects/harfoush.webp",
+    "title": "حرفوش برينت",
+    "desc": "منصة طباعة حسب الطلب في مصر: يصمم العميل منتجه في المتصفح، ويدفع عبر Paymob، ويتابع طلبه خطوة بخطوة.",
+    "challenge": "كانت الطلبات تصل بالهاتف، وملفات التصميم تُرسل يدوياً، ولا يعرف العميل أين وصل طلبه، فيضيع البيع في كل خطوة.",
+    "solution": "منصة متكاملة فيها محرر تصميم داخل المتصفح مع معاينة حية، ودفع بالبطاقة والمحفظة عبر Paymob، وإشعارات آلية عبر واتساب والرسائل والبريد، ولوحة إدارة بمناطق توصيل مسماة.",
+    "features": [
+     "محرر تصميم مع معاينة حية للمنتج",
+     "دفع Paymob بالبطاقات والمحافظ الإلكترونية",
+     "تتبع الطلب للضيوف وإشعارات واتساب",
+     "انتقالات صفحات ثلاثية الأبعاد ولوحة إدارة كاملة"
+    ]
+   },
+   {
+    "key": "fit",
+    "kind": "product",
+    "url": "https://fit.sarmadax.com",
+    "img": "/images/projects/fit.webp",
+    "phone": "/images/projects/fit-phone.webp",
+    "title": "سرمدكس فت",
+    "desc": "برنامج لإدارة الجيم والأندية الرياضية: الأعضاء والاشتراكات والمدفوعات، وتسجيل الدخول بكود QR، وتذكير بالتجديد عبر واتساب.",
+    "audience": "للجيمات وحمامات السباحة وأكاديميات الكرة والفنون القتالية والأندية",
+    "price": "من 10 دولار شهرياً",
+    "cta": "جرّبه 14 يوماً مجاناً",
+    "challenge": "تدير الأندية اشتراكاتها في دفاتر ومجموعات واتساب، فتنتهي الاشتراكات دون تجديد، وتزدحم الاستقبال وقت الذروة، ولا يعرف المالك دخل يومه.",
+    "solution": "منتج سحابي من سرمدكس بالعربية والإنجليزية وبعملة كل بلد: لكل عضو كود على هاتفه يُمسح عند الباب، ويصله تذكير قبل انتهاء اشتراكه، ويرى المالك الدخل والأعضاء والمتأخرين في الصفحة الأولى.",
+    "features": [
+     "تسجيل دخول بكود QR بكاميرا أي هاتف",
+     "تذكير بالتجديد عبر واتساب قبل انتهاء الاشتراك",
+     "دخل اليوم والأعضاء النشطون والمتأخرون في شاشة واحدة",
+     "نسخ احتياطي مشفر كل ليلة وخوادم في فرانكفورت"
+    ]
+   },
+   {
+    "key": "assaf",
+    "kind": "work",
+    "url": "https://assafmedical.com",
+    "img": "/images/projects/assaf.webp",
+    "title": "عساف ميديكال",
+    "desc": "موقع رعاية صحية منزلية في القاهرة والجيزة: كشف منزلي وتمريض وتحاليل وأشعة ورعاية متوسطة، والحجز عبر واتساب.",
+    "challenge": "خدمة طبية راقية تحتاج موقعاً يطمئن الأسرة من النظرة الأولى، ويشرح أكثر من عشر خدمات بوضوح، ويحول الزائر القلق إلى حجز في دقيقة.",
+    "solution": "موقع عربي أولاً على Next.js 16 مع إنجليزية كاملة، فيه شريط ثلاثي الأبعاد في الواجهة، وحركة تمرير هادئة بـ GSAP وLenis، وصفحة لكل خدمة، ومقالات طبية، وحجز يملأ رسالة واتساب جاهزة.",
+    "features": [
+     "صفحة لكل خدمة تُبنى من ملف بيانات واحد",
+     "نموذج حجز يرسل رسالة واتساب جاهزة",
+     "مقالات طبية بـ MDX مع بيانات منظمة لمحركات البحث",
+     "مشهد ثلاثي الأبعاد يُحمّل في الصفحة الرئيسية فقط"
+    ]
    },
    {
     "key": "rudd",
+    "kind": "product",
+    "url": "https://rudd.sarmadax.com",
+    "img": "/images/projects/rudd.webp",
+    "phone": "/images/projects/rudd-phone.webp",
     "title": "رُدّ",
-    "desc": "منصة SaaS تربط واتساب وجوجل كالندر ليعالج وكيل ذكاء اصطناعي الحجوزات وتأهيل العملاء على مدار الساعة — دون الحاجة لموظفين.",
-    "challenge": "أصحاب الشركات الصغيرة في منطقة الشرق الأوسط وشمال أفريقيا يخسرون عشرات العملاء كل أسبوع لأنهم لا يستطيعون الرد على استفسارات واتساب بسرعة كافية. حجز المواعيد يدوياً وإرسال التذكيرات ومتابعة العملاء عمل دوام كامل لا تستطيع معظم الشركات تحمل تكاليفه.",
-    "solution": "رُدّ يتصل بحساب واتساب للأعمال وجوجل كالندر ثم يطلق وكيل ذكاء اصطناعي يتولى عملية الحجز كاملة بشكل محادثاتي — بالعربية أو الإنجليزية. يؤهل العميل المحتمل ويتحقق من التوفر ويحجز الموعد ويرسل التأكيد دون تدخل بشري.",
+    "desc": "مساعد ذكاء اصطناعي يرد على عملائك في واتساب ليل نهار، ويتحقق من تقويم جوجل، ويحجز الموعد ويرسل التأكيد.",
+    "audience": "لكل عمل يأخذ حجوزات: العيادات والصالونات والمكاتب",
+    "price": "من 25 دولار شهرياً",
+    "cta": "ابدأ الآن",
+    "challenge": "يخسر أصحاب الأعمال الصغيرة عملاء كل أسبوع لأنهم لا يردون على واتساب بسرعة، والحجز اليدوي والتذكير والمتابعة عمل يوم كامل.",
+    "solution": "منتج من سرمدكس يتصل بواتساب للأعمال وتقويم جوجل، ويدير وكيل ذكاء اصطناعي محادثة الحجز كاملة بالعربية أو الإنجليزية: يفهم الطلب، ويجد موعداً فارغاً، ويحجزه، ويذكّر العميل قبله.",
     "features": [
-     "تكامل واتساب للأعمال وجوجل كالندر",
-     "محادثة حجز بالذكاء الاصطناعي بالعربية والإنجليزية",
-     "OpenAI مع سير عمل دائمة عبر Inngest",
-     "مصادقة متعددة المستأجرين عبر Clerk على Next.js 15"
-    ],
-    "url": "https://rudd-web.vercel.app",
-    "img": "/images/projects/rudd.png"
+     "واتساب كلاود API مباشرة دون وسيط",
+     "حجز ذكي بالعربية والإنجليزية مع استدعاء الدوال",
+     "مهام دائمة عبر Inngest لا تضيع إن تعطل شيء",
+     "حسابات متعددة للشركات عبر Clerk وقاعدة Neon"
+    ]
    },
    {
     "key": "sarmadax",
-    "title": "موقع وكالة سرمداكس",
-    "desc": "موقع وكالة رقمية ثنائي اللغة مبني بـ Next.js وFramer Motion وnext-intl — يتضمن أقساماً متحركة وصفحة أسعار وبورتفوليو ونموذج تواصل.",
-    "challenge": "وكالة رقمية في نمو احتاجت موقعاً يخدم العملاء العرب والإنجليز بجودة متساوية — مع تخطيط RTL صحيح تاماً وحركات تمرير راقية وبنية تحول الزوار إلى عملاء.",
-    "solution": "بناء موقع Next.js ثنائي اللغة بالكامل مع next-intl لتبديل اللغة عبر الكوكيز، وFramer Motion لحركات عند التمرير، ونظام تصميم يجتاز جميع فحوصات التخطيط في وضعي LTR وRTL دون أي تعديلات استثنائية.",
-    "features": [
-     "دعم ثنائي اللغة عربي/إنجليزي مع تخطيط RTL صحيح",
-     "حركات Framer Motion عند التمرير في جميع الأقسام",
-     "صفحة أسعار ومعرض أعمال ونموذج تواصل متحرك",
-     "تبديل اللغة عبر الكوكيز دون تغيير بادئة الرابط"
-    ],
+    "kind": "work",
     "url": "https://sarmadax.com",
-    "img": "/images/projects/sarmadax.png"
+    "img": "/images/projects/sarmadax.webp",
+    "title": "سرمدكس",
+    "desc": "موقع وكالتي الرقمية: أعمال ومنتجات وخدمات بالعربية والإنجليزية، مع مدينة ثلاثية الأبعاد تضيء حيث تعمل منتجاتنا.",
+    "challenge": "وكالة تبيع خدمات مخصصة ومنتجات جاهزة معاً تحتاج موقعاً يشرح الاثنين دون ارتباك، ويقنع صاحب عمل عربي في الدقيقة الأولى.",
+    "solution": "موقع على Next.js 16 مع Three.js وGSAP وLenis، عربي على الرابط الرئيسي وإنجليزي على /en، يعمل على Cloudflare Workers، ونموذج تواصل يرسل البريد عبر Resend، وصفحة منتجات تصفّي حسب نوع العمل.",
+    "features": [
+     "صفحة منتجات تصفّي حسب نوع العمل",
+     "مدينة ثلاثية الأبعاد ودراسات حالة لكل مشروع",
+     "نشر تلقائي على Cloudflare Workers",
+     "اختبارات وفحص متصفح لكل صفحة"
+    ]
    },
    {
-    "key": "tajdera",
-    "title": "تجديرة",
-    "desc": "تطبيق تتبع ميزانية شخصية ممتع يسخر من عاداتك الإنفاقية عبر 4 مستويات عار. يعمل بالكامل دون إنترنت، ثنائي اللغة عربي/إنجليزي.",
-    "challenge": "معظم تطبيقات التمويل الشخصي تبدو كواجب مدرسي — المستخدمون يفتحونها مرة ثم يتركونها. التحدي كان بناء شيء يريد الناس العودة إليه فعلاً، وتتبع الميزانية فيه ممتع لا مضنٍ.",
-    "solution": "بناء متتبع ميزانية ممتع يسخر من عادات الإنفاق بأسلوب ذكاء اصطناعي ساخر عبر 4 مستويات خجل متصاعدة. يعمل بالكامل دون إنترنت مع localStorage دون حاجة لحساب، مع دعم ثنائي اللغة عربي/إنجليزي وتخطيط RTL كامل.",
-    "features": [
-     "4 مستويات خجل متصاعدة مع تعليقات ساخرة بأسلوب الذكاء الاصطناعي",
-     "يعمل 100% دون إنترنت — كل البيانات في localStorage دون خادم",
-     "دعم ثنائي اللغة عربي/إنجليزي مع تخطيط RTL كامل",
-     "ردود فعل متحركة بـ Framer Motion على كل تفاعل"
-    ],
+    "key": "girishatk",
+    "kind": "work",
     "url": "https://girishatk.vercel.app",
-    "img": "/images/projects/tajdera.png"
+    "img": "/images/projects/girishatk.webp",
+    "title": "قريشاتك",
+    "desc": "تطبيق ميزانية سوداني ساخر: سجّل مصروفك، ويعلّق عليه عمك عباس بلهجة سودانية، ويرتفع عدّاد الفضيحة مع كل تبذير.",
+    "challenge": "تطبيقات الميزانية تعظ المستخدم فيتركها بعد يومين. التحدي أن يصبح تسجيل المصروف شيئاً يرجع إليه الناس بأنفسهم.",
+    "solution": "بدل الوعظ، سخرية: أكثر من 80 تعليقاً أصلياً باللهجة السودانية، وعدّاد فضيحة بأربع درجات، وتحميصة صباحية كل يوم. يعمل دون إنترنت ودون حساب، على الويب وكتطبيق أندرويد عبر Capacitor.",
+    "features": [
+     "أكثر من 80 تعليقاً ساخراً باللهجة السودانية",
+     "عدّاد فضيحة لحظي بأربع درجات",
+     "يعمل دون إنترنت ودون حساب",
+     "تطبيق أندرويد عبر Capacitor وتطبيق ويب قابل للتثبيت"
+    ]
+   },
+   {
+    "key": "concepts",
+    "kind": "concepts",
+    "url": "https://sarmadax.com/portfolio",
+    "img": "/images/projects/concepts.webp",
+    "title": "تجارب الاستوديو",
+    "desc": "خمسة مواقع لأعمال متخيلة صممناها في سرمدكس لنجرب أفكاراً لكل نوع من الأعمال: مقهى، وتأجير سيارات، ومتجر أزياء، وجيم، وبرج سكني.",
+    "challenge": "",
+    "solution": "",
+    "features": [],
+    "items": [
+     {
+      "key": "bunn",
+      "title": "بُن وهيل",
+      "desc": "منيو QR لمقهى مختص في القاهرة: بحث، وبطاقة ولاء، ولوحة للمالك يغيّر فيها الأسعار.",
+      "url": "https://sarmadax.com/work/bunn/",
+      "img": "/images/projects/concepts/bunn.webp"
+     },
+     {
+      "key": "masar",
+      "title": "مسار",
+      "desc": "موقع تأجير سيارات في القاهرة: تصفح الأسطول، وحاسبة سعر حية، وحجز دون دفع مسبق.",
+      "url": "https://sarmadax.com/work/masar/",
+      "img": "/images/projects/concepts/masar.webp"
+     },
+     {
+      "key": "leen",
+      "title": "لين",
+      "desc": "متجر عبايات في دبي: قطعة مميزة، وخيار التفصيل على المقاس، وحقيبة تسوق بالدرهم.",
+      "url": "https://sarmadax.com/work/leen/",
+      "img": "/images/projects/concepts/leen.webp"
+     },
+     {
+      "key": "nabd",
+      "title": "نبض",
+      "desc": "موقع جيم في جدة: حجز الحصص، وخطط العضوية، وحصة أولى مجانية.",
+      "url": "https://sarmadax.com/work/nabd/",
+      "img": "/images/projects/concepts/nabd.webp"
+     },
+     {
+      "key": "madar",
+      "title": "مدار",
+      "desc": "برج سكني من 42 طابقاً في الرياض: برج تفاعلي لاختيار الوحدة، وخريطة، وحجز معاينة.",
+      "url": "https://sarmadax.com/work/madar/",
+      "img": "/images/projects/concepts/madar.webp"
+     }
+    ]
    }
   ],
   "services": [
@@ -179,7 +272,13 @@
    "sent": "تم إرسال الرسالة!",
    "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
    "location": "السودان — عالمياً"
-  }
+  },
+  "live": "يعمل الآن",
+  "forWho": "لمن",
+  "pricing": "السعر",
+  "concept": "تجربة",
+  "openConcept": "افتح التجربة",
+  "studio": "من منتجات سرمدكس"
  },
  "en": {
   "name": "Ahmed Yousif",
@@ -237,79 +336,172 @@
   "timeLabel": "Time of day",
   "projects": [
    {
-    "key": "electroerp",
-    "title": "ElectroPro ERP",
-    "desc": "Full-stack electrical supplies platform combining e-commerce with ERP — inventory, accounting, HR, and order management in one system. Live at himmat.store.",
-    "challenge": "A traditional electrical supplies business was managing inventory, sales, accounting, HR, and orders across disconnected spreadsheets and phone calls — causing stock errors, billing delays, and lost revenue with no single source of truth.",
-    "solution": "Built a unified full-stack ERP on Next.js and PostgreSQL that consolidates all business operations into one system with role-based access, real-time inventory tracking, double-entry accounting, and a customer-facing storefront — all live at himmat.store.",
+    "key": "himmat",
+    "kind": "work",
+    "url": "https://www.himmat.store",
+    "img": "/images/projects/himmat.webp",
+    "title": "Himmat",
+    "desc": "An online store and business system for an electrical appliances shop in Khartoum: 130+ products, point of sale, inventory, accounting and staff roles.",
+    "challenge": "The shop ran stock, sales and accounts across separate ledgers and spreadsheets. Quantities went missing, invoices ran late, and the owner had no single view of the business.",
+    "solution": "One system on Next.js and PostgreSQL that brings together the storefront, point of sale, inventory and double-entry accounting, with roles for manager, accountant and customer service, and a storefront with 3D motion.",
     "features": [
-     "Role-based access for admin, warehouse, accountant, and sales staff",
-     "Real-time inventory with low-stock alerts and supplier management",
-     "Double-entry accounting with automated journal entries and reports",
-     "Customer portal with order tracking and invoice generation"
-    ],
-    "url": "https://himmat.store",
-    "img": "/images/projects/electroerp.png"
+     "Arabic storefront with 130+ products and order tracking",
+     "Point of sale and live inventory with low-stock alerts",
+     "Double-entry accounting, invoices and reports",
+     "Roles for manager, accountant and customer service"
+    ]
    },
    {
-    "key": "printshop",
-    "title": "PrintCraft",
-    "desc": "Custom print-on-demand platform with an interactive visual design builder, Paymob payment integration, and automated WhatsApp/SMS/email notifications.",
-    "challenge": "A print-on-demand shop was losing customers because orders were placed by phone, design files emailed manually, and customers had zero visibility into their order status — creating friction at every step of the sales funnel.",
-    "solution": "Delivered a full e-commerce platform with an in-browser design builder where customers upload artwork, add text, and preview their product before purchasing. Integrated Paymob for card/wallet payments and automated WhatsApp, SMS, and email notifications at every order stage.",
-    "features": [
-     "In-browser design builder with live product preview",
-     "Paymob gateway with card and mobile-wallet support",
-     "Automated WhatsApp, SMS, and email order notifications",
-     "Admin dashboard for order management and fulfillment"
-    ],
+    "key": "harfoush",
+    "kind": "work",
     "url": "https://harfoushprint.com",
-    "img": "/images/projects/printshop.png"
+    "img": "/images/projects/harfoush.webp",
+    "title": "Harfoush Print",
+    "desc": "A print-on-demand platform in Egypt: customers design their product in the browser, pay through Paymob, and follow the order step by step.",
+    "challenge": "Orders came in by phone, design files arrived by email, and customers never knew where their order was. Sales leaked at every step.",
+    "solution": "A full platform with an in-browser design builder and live preview, card and wallet payments through Paymob, automatic WhatsApp, SMS and email updates, and an admin panel with named delivery zones.",
+    "features": [
+     "Design builder with a live product preview",
+     "Paymob payments by card and mobile wallet",
+     "Guest order tracking and WhatsApp updates",
+     "3D page transitions and a complete admin panel"
+    ]
+   },
+   {
+    "key": "fit",
+    "kind": "product",
+    "url": "https://fit.sarmadax.com",
+    "img": "/images/projects/fit.webp",
+    "phone": "/images/projects/fit-phone.webp",
+    "title": "Sarmadax Fit",
+    "desc": "Software to run a gym or sports club: members, subscriptions and payments, QR check-in at the door, and WhatsApp renewal reminders.",
+    "audience": "For gyms, pools, football and martial-arts academies, and sports clubs",
+    "price": "From 10 USD / month",
+    "cta": "Start a 14-day free trial",
+    "challenge": "Clubs track memberships in notebooks and WhatsApp groups. Memberships lapse without renewal, reception jams at rush hour, and the owner can’t see the day’s income.",
+    "solution": "A Sarmadax cloud product in Arabic and English, in each country’s currency. Every member has a code on their phone that reception scans at the door, a reminder arrives before a membership ends, and the owner sees income, members and who owes on the first screen.",
+    "features": [
+     "QR check-in with any phone camera",
+     "WhatsApp renewal reminders before a membership ends",
+     "Today’s income, active members and debts on one screen",
+     "Nightly encrypted backups, servers in Frankfurt"
+    ]
+   },
+   {
+    "key": "assaf",
+    "kind": "work",
+    "url": "https://assafmedical.com",
+    "img": "/images/projects/assaf.webp",
+    "title": "Assaf Medical",
+    "desc": "A home healthcare website for Cairo and Giza: doctor visits, nursing, labs, imaging and intermediate care, booked on WhatsApp.",
+    "challenge": "A premium medical service needed a site that reassures a family at first glance, explains more than ten services clearly, and turns a worried visitor into a booking within a minute.",
+    "solution": "An Arabic-first Next.js 16 site with full English: a 3D ribbon in the hero, calm GSAP and Lenis scrolling, a page for every service, medical articles, and booking that fills in a ready WhatsApp message.",
+    "features": [
+     "A page per service, all built from one data file",
+     "Booking form that sends a ready WhatsApp message",
+     "MDX medical articles with structured data for search",
+     "3D scene loaded on the home page only"
+    ]
    },
    {
     "key": "rudd",
+    "kind": "product",
+    "url": "https://rudd.sarmadax.com",
+    "img": "/images/projects/rudd.webp",
+    "phone": "/images/projects/rudd-phone.webp",
     "title": "Rudd",
-    "desc": "SaaS platform that connects WhatsApp and Google Calendar so an AI agent handles bookings and lead qualification 24/7 — no staff needed.",
-    "challenge": "Small business owners in MENA lose dozens of leads every week because they cannot respond to WhatsApp inquiries fast enough. Manually booking appointments, sending reminders, and following up with leads is a full-time job most businesses cannot staff properly.",
-    "solution": "Rudd connects to your WhatsApp Business account and Google Calendar, then deploys an AI agent that handles the entire booking flow conversationally — in Arabic or English. It qualifies the lead, checks calendar availability, books the appointment, and sends confirmation without human intervention.",
+    "desc": "An AI assistant that answers your customers on WhatsApp day and night, checks Google Calendar, books the appointment and sends the confirmation.",
+    "audience": "For any business that takes bookings: clinics, salons, offices",
+    "price": "From 25 USD / month",
+    "cta": "Get started",
+    "challenge": "Small business owners lose customers every week because they can’t answer WhatsApp fast enough, and booking, reminding and following up by hand is a full-time job.",
+    "solution": "A Sarmadax product that connects WhatsApp Business and Google Calendar. An AI agent runs the whole booking conversation in Arabic or English: it understands the request, finds a free slot, books it and reminds the customer beforehand.",
     "features": [
-     "WhatsApp Business + Google Calendar integration",
-     "AI booking conversation in Arabic and English",
-     "OpenAI function calling with Inngest durable workflows",
-     "Multi-tenant auth via Clerk on Next.js 15"
-    ],
-    "url": "https://rudd-web.vercel.app",
-    "img": "/images/projects/rudd.png"
+     "WhatsApp Cloud API directly, no middleman",
+     "AI booking in Arabic and English with function calling",
+     "Durable Inngest jobs that survive failures",
+     "Multi-tenant accounts with Clerk and Neon"
+    ]
    },
    {
     "key": "sarmadax",
-    "title": "Sarmadax Agency Site",
-    "desc": "A bilingual digital agency website built with Next.js, Framer Motion, and next-intl — featuring animated sections, a pricing page, portfolio, and contact form.",
-    "challenge": "A growing digital agency needed a website that could simultaneously serve Arabic-speaking and English-speaking clients with equal quality — demanding perfect RTL layout, premium scroll animations, and a structure that converts visitors into leads.",
-    "solution": "Built a fully bilingual Next.js site with next-intl for cookie-based locale switching, Framer Motion for scroll-triggered animations, and a design system that passes all layout correctness checks in both LTR and RTL modes with no overrides or hacks.",
-    "features": [
-     "Full Arabic/English bilingual support with correct RTL layout",
-     "Scroll-triggered Framer Motion animations across all sections",
-     "Pricing page, portfolio gallery, and animated contact form",
-     "Cookie-based locale switching with no URL prefix changes"
-    ],
+    "kind": "work",
     "url": "https://sarmadax.com",
-    "img": "/images/projects/sarmadax.png"
+    "img": "/images/projects/sarmadax.webp",
+    "title": "Sarmadax",
+    "desc": "My digital studio’s site: work, products and services in Arabic and English, with a 3D city that lights up where our products run.",
+    "challenge": "A studio that sells custom work and ready-made products together needs a site that explains both without confusion, and wins over an Arab business owner in the first minute.",
+    "solution": "Next.js 16 with Three.js, GSAP and Lenis; Arabic at the root and English at /en; deployed to Cloudflare Workers, with a Resend contact form and a products page you can filter by type of business.",
+    "features": [
+     "Products page filtered by type of business",
+     "3D city and a case study for every project",
+     "Automatic deploys to Cloudflare Workers",
+     "Tests and a browser sweep of every page"
+    ]
    },
    {
-    "key": "tajdera",
-    "title": "Tajdera",
-    "desc": "A gamified personal budget tracker that roasts your spending habits with AI-style sarcasm across 4 shame tiers. Fully offline, bilingual Arabic/English.",
-    "challenge": "Most personal finance apps feel like homework — users open them once and abandon them. The challenge was building something that people genuinely want to return to, where tracking a budget feels rewarding instead of tedious.",
-    "solution": "Built a gamified budget tracker that roasts spending habits with AI-style sarcasm across 4 escalating shame tiers. Fully offline-first with localStorage so no account is needed, with complete bilingual Arabic/English support and RTL layout throughout.",
-    "features": [
-     "4 escalating shame tiers with sarcastic AI-style commentary",
-     "100% offline — all data in localStorage, zero backend needed",
-     "Full Arabic/English bilingual support with RTL layout",
-     "Framer Motion animated feedback on every interaction"
-    ],
+    "key": "girishatk",
+    "kind": "work",
     "url": "https://girishatk.vercel.app",
-    "img": "/images/projects/tajdera.png"
+    "img": "/images/projects/girishatk.webp",
+    "title": "Girishatk",
+    "desc": "A Sudanese budget tracker that roasts you: log a spend, Uncle Abbas comments in Sudanese dialect, and the shame meter climbs with every splurge.",
+    "challenge": "Budget apps lecture people, so they quit after two days. The challenge was to make logging spending something people come back to on their own.",
+    "solution": "Roasts instead of lectures: 80+ original lines in Sudanese Arabic, a four-tier shame meter and a morning roast every day. Works offline with no account, on the web and as an Android app through Capacitor.",
+    "features": [
+     "80+ original roast lines in Sudanese Arabic",
+     "Live four-tier shame meter",
+     "Fully offline, no account needed",
+     "Android app via Capacitor, installable as a PWA"
+    ]
+   },
+   {
+    "key": "concepts",
+    "kind": "concepts",
+    "url": "https://sarmadax.com/portfolio",
+    "img": "/images/projects/concepts.webp",
+    "title": "Studio concepts",
+    "desc": "Five sites for imagined businesses that we designed at Sarmadax to try ideas for every kind of business: a café, car rental, a fashion store, a gym and a residential tower.",
+    "challenge": "",
+    "solution": "",
+    "features": [],
+    "items": [
+     {
+      "key": "bunn",
+      "title": "Bunn",
+      "desc": "A QR menu for a Cairo specialty café: search, a loyalty card, and an owner panel to change prices.",
+      "url": "https://sarmadax.com/work/bunn/",
+      "img": "/images/projects/concepts/bunn.webp"
+     },
+     {
+      "key": "masar",
+      "title": "Masar",
+      "desc": "Car rental in Cairo: fleet browser, a live price calculator, and booking without prepayment.",
+      "url": "https://sarmadax.com/work/masar/",
+      "img": "/images/projects/concepts/masar.webp"
+     },
+     {
+      "key": "leen",
+      "title": "Leen",
+      "desc": "An abaya boutique in Dubai: a featured piece, made-to-measure option and a bag priced in AED.",
+      "url": "https://sarmadax.com/work/leen/",
+      "img": "/images/projects/concepts/leen.webp"
+     },
+     {
+      "key": "nabd",
+      "title": "Nabd",
+      "desc": "A gym in Jeddah: class booking, membership plans and a free first session.",
+      "url": "https://sarmadax.com/work/nabd/",
+      "img": "/images/projects/concepts/nabd.webp"
+     },
+     {
+      "key": "madar",
+      "title": "Madar",
+      "desc": "A 42-floor residential tower in Riyadh: an interactive tower to pick a unit, a map and viewing booking.",
+      "url": "https://sarmadax.com/work/madar/",
+      "img": "/images/projects/concepts/madar.webp"
+     }
+    ]
    }
   ],
   "services": [
@@ -361,7 +553,13 @@
    "sent": "Message Sent!",
    "error": "Something went wrong. Please try again.",
    "location": "Sudan — Worldwide"
-  }
+  },
+  "live": "Live now",
+  "forWho": "Who it’s for",
+  "pricing": "Price",
+  "concept": "Concept",
+  "openConcept": "Open concept",
+  "studio": "A Sarmadax product"
  },
  "skills": [
   "Next.js",
@@ -378,6 +576,6 @@
   "WhatsApp Cloud API"
  ],
  "email": "ahmedmax0909090909@gmail.com",
- "whatsapp": "+20 150 709 0565",
- "whatsappLink": "https://wa.me/201507090565"
+ "whatsapp": "+20 109 498 5025",
+ "whatsappLink": "https://wa.me/201094985025"
 }

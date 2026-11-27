@@ -4,7 +4,7 @@
    lives in its own module. */
 import * as THREE from "three";
 import { Sound } from "./audio";
-import { buildGallery } from "./gallery";
+import { buildGallery, type Exhibit } from "./gallery";
 import { buildMajlis } from "./majlis";
 import { makePost } from "./post";
 import { buildRiver } from "./river";
@@ -42,7 +42,7 @@ export interface Engine {
   dispose: () => void;
 }
 
-export function createEngine(canvas: HTMLCanvasElement, images: string[], serviceCount: number, cb: EngineCallbacks): Engine | null {
+export function createEngine(canvas: HTMLCanvasElement, exhibits: Exhibit[], serviceCount: number, cb: EngineCallbacks): Engine | null {
   let renderer: THREE.WebGLRenderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, stencil: false, powerPreference: "high-performance" });
@@ -69,7 +69,7 @@ export function createEngine(canvas: HTMLCanvasElement, images: string[], servic
 
   const rigs = {
     river: buildRiver(sound, state),
-    gallery: buildGallery(renderer, sound, images, cb, state),
+    gallery: buildGallery(renderer, sound, exhibits, cb, state),
     sky: buildSky(sound, serviceCount, cb, state),
     majlis: buildMajlis(renderer, state),
   };
