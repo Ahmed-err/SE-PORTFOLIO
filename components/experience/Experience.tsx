@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { content, contactInfo, skills, type Lang } from "@/lib/content";
 import { createEngine, GATE_STOPS, type Engine, type Place } from "./engine";
+import { Emblem } from "./Emblem";
 
 const PLACES: Place[] = ["river", "gallery", "sky", "majlis"];
 const GATE_PLACE: Place[] = ["gallery", "sky", "majlis"];
@@ -301,9 +302,7 @@ export default function Experience() {
 
       <header className="xp-top">
         <div className="xp-lead">
-          <span className="xp-mark" aria-hidden="true">
-            {lang === "ar" ? "أ ي" : "AY"}
-          </span>
+          <Emblem className="xp-mark" />
           {place !== "river" && entered && (
             <button type="button" className="xp-back" onClick={() => go("river")}>
               <Arrow />
