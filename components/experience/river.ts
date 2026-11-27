@@ -52,17 +52,21 @@ const vn = (x: number, z: number) => Math.sin(x * 0.37 + z * 0.11) * Math.sin(z 
 
 /* the two looks the slider moves between */
 const C = (h: number) => new THREE.Color(h);
+/* golden hour as contrast, not one orange wash: the sun is warm, the sky
+   that fills the shadows is cool, the haze is a soft dusty rose, and the
+   river carries the blue of the sky with the sun's gold on top */
 const DUSK = {
-  top: C(0x2b1a57),
+  top: C(0x1d2862),
   hor: C(0xf08a3e),
   glow: C(0xff9440),
   sun: C(0xffe2b0),
-  dir: C(0xffa85a),
-  hs: C(0xffc08a),
-  hg: C(0x3a2416),
-  deep: C(0x1e1226),
-  tint: C(0x9a5a34),
-  spec: C(0xffb468),
+  dir: C(0xffa65a),
+  hs: C(0x8f98cc),
+  hg: C(0x2c1f1c),
+  deep: C(0x121a36),
+  tint: C(0x4d5e88),
+  spec: C(0xffbe74),
+  fog: C(0xbf8c84),
 };
 const NIGHT = {
   top: C(0x01030c),
@@ -75,13 +79,14 @@ const NIGHT = {
   deep: C(0x02050e),
   tint: C(0x1d2b55),
   spec: C(0xbcd0ff),
+  fog: C(0x0d1a3c),
 };
 
 export function buildRiver(sound: Sound, state: WorldState) {
   const rnd = makeRnd(7);
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 1400);
-  scene.fog = new THREE.Fog(DUSK.hor, 30, 260);
+  scene.fog = new THREE.Fog(DUSK.fog, 48, 340);
 
   const sky = makeSkyDome({ top: DUSK.top, hor: DUSK.hor, glow: DUSK.glow, sun: DUSK.sun, sunSize: 0.036, sunI: 6, glowI: 1.0, hazeI: 0.55, cloudI: 0.75 });
   scene.add(sky.mesh);
@@ -169,7 +174,7 @@ export function buildRiver(sound: Sound, state: WorldState) {
   }
 
   /* water with real reflections */
-  const water = makeWater({ width: 60, length: 820, deep: DUSK.deep, tint: DUSK.tint, fog: DUSK.hor, fogNear: 30, fogFar: 260, shore: true });
+  const water = makeWater({ width: 60, length: 820, deep: DUSK.deep, tint: DUSK.tint, fog: DUSK.fog, fogNear: 48, fogFar: 340, shore: true });
   water.water.position.set(0, 0, -330);
   scene.add(water.water);
 
@@ -582,14 +587,14 @@ export function buildRiver(sound: Sound, state: WorldState) {
     u.hazeI.value = 0.55 - d * 0.35;
     u.cloudI.value = 0.75 - d * 0.42;
     u.moon.value = sstep(0.35, 0.75, d);
-    (scene.fog as THREE.Fog).color.copy(u.hor.value);
+    (scene.fog as THREE.Fog).color.copy(DUSK.fog).lerp(NIGHT.fog, d);
     const w = water.uniforms;
-    w.fogc.value.copy(u.hor.value);
+    w.fogc.value.copy((scene.fog as THREE.Fog).color);
     w.deep.value.copy(DUSK.deep).lerp(NIGHT.deep, d);
     w.tint.value.copy(DUSK.tint).lerp(NIGHT.tint, d);
     w.sunCol.value.copy(DUSK.spec).lerp(NIGHT.spec, d).multiplyScalar(1 - d * 0.45);
     dir.color.copy(DUSK.dir).lerp(NIGHT.dir, d);
-    dir.intensity = 3.6 - d * 2.7;
+    dir.intensity = 4.3 - d * 3.4;
     hemi.color.copy(DUSK.hs).lerp(NIGHT.hs, d);
     hemi.groundColor.copy(DUSK.hg).lerp(NIGHT.hg, d);
     hemi.intensity = 1.6 - d * 0.7;
@@ -626,9 +631,9 @@ export function buildRiver(sound: Sound, state: WorldState) {
     bloomRadius: 0.5,
     bloomThreshold: 1.15,
   };
-  const liftD = C(0x000000).setRGB(0.012, 0.004, 0.02);
+  const liftD = C(0x000000).setRGB(0.0, 0.007, 0.024);
   const liftN = C(0x000000).setRGB(0.0, 0.005, 0.016);
-  const gainD = C(0x000000).setRGB(1.04, 0.99, 0.93);
+  const gainD = C(0x000000).setRGB(1.05, 0.99, 0.91);
   const gainN = C(0x000000).setRGB(0.94, 0.98, 1.06);
 
   /* -------------------------------------------------------------- camera */
@@ -802,7 +807,7 @@ export function buildRiver(sound: Sound, state: WorldState) {
 
     const n = tod;
     grade.exposure = 1 + n * 0.12;
-    grade.sat = 1.08 - n * 0.14;
+    grade.sat = 1.04 - n * 0.12;
     grade.lift.copy(liftD).lerp(liftN, n);
     grade.gain.copy(gainD).lerp(gainN, n);
     grade.bloom = 0.5 + n * 0.2;
