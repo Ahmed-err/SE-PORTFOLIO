@@ -419,13 +419,14 @@ export default function Experience() {
           </p>
           <p className="xp-clamp">{focused.desc}</p>
           <div className="xp-row">
-            <button type="button" className="btn round" onClick={() => engineRef.current?.stepGallery(-1)} aria-label={t.prev}>
+            {/* each button turns the way its arrow points; in Arabic the row is mirrored */}
+            <button type="button" className="btn round" onClick={() => engineRef.current?.stepGallery(lang === "ar" ? 1 : -1)} aria-label={t.prev}>
               <Arrow />
             </button>
             <button type="button" className="btn primary" onClick={() => setOpenProject(focus)}>
               {t.open}
             </button>
-            <button type="button" className="btn round" onClick={() => engineRef.current?.stepGallery(1)} aria-label={t.next}>
+            <button type="button" className="btn round" onClick={() => engineRef.current?.stepGallery(lang === "ar" ? -1 : 1)} aria-label={t.next}>
               <Arrow flip />
             </button>
           </div>

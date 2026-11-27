@@ -368,7 +368,7 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
     hover: (ray) => !!hit(ray),
     drag: (dx) => {
       dragging = true;
-      yawT += dx * 0.006;
+      yawT -= dx * 0.006;
     },
     dragEnd: () => {
       dragging = false;
