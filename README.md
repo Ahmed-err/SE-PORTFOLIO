@@ -44,7 +44,9 @@ audio or 3D model files: every scene, texture and sound is generated in code.
 - `components/experience/city.ts`: towers with lit windows, the sail, the bridge, the mosque, traffic.
 - `components/experience/post.ts`: bloom and the grading pass.
 - `components/experience/audio.ts`: all sound.
-- `app/api/contact/route.ts`: contact form, sent through Resend.
+- `app/api/contact/route.ts`: contact form: saved to Postgres, then sent through Resend.
+- `lib/messages.ts`, `db/0001_messages.sql`: stored messages, read by the Sarmadax Console.
+- `app/api/internal/console/leads*`: the Console's signed API (`lib/console-auth.ts`).
 - `public/images/projects/`: project screenshots shown in the gallery.
 
 ## Run it
@@ -55,4 +57,18 @@ npm run dev
 ```
 
 Copy `.env.example` to `.env.local` and set `RESEND_API_KEY` and `CONTACT_EMAIL`
-so the contact form sends email. Without them, messages are only logged.
+so the contact form sends email. `npm test` runs the unit tests.
+
+## Sarmadax Console
+
+Every message is saved to Postgres before it is emailed, so a Resend failure no
+longer loses it, and the Console (console.sarmadax.com → البورتفوليو) lists them
+with a status and notes. One-time setup on the Vercel project:
+
+1. `DATABASE_URL`: a Neon Postgres connection string (pooled). Run
+   `db/0001_messages.sql` against it once (Neon SQL editor or `psql`).
+2. `CONSOLE_API_SECRET`: `openssl rand -base64 48`; set the same value as
+   `PORTFOLIO_CONSOLE_SECRET` on the Console.
+
+Without `DATABASE_URL` the form still emails, and the Console shows the inbox as
+not connected.
