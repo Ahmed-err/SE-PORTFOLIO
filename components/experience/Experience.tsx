@@ -247,12 +247,12 @@ export default function Experience() {
     if (place !== "gallery" || openProject !== null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-      const right = e.key === "ArrowRight";
-      engineRef.current?.stepGallery(right === (lang === "en") ? 1 : -1);
+      /* each arrow turns the way it points, in either language */
+      engineRef.current?.stepGallery(e.key === "ArrowRight" ? 1 : -1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [place, openProject, lang]);
+  }, [place, openProject]);
 
   /* quiet sounds under the interface */
   const onOver = (e: React.PointerEvent) => {

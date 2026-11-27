@@ -1,4 +1,4 @@
-/* The Gallery: client work hung in brass frames around a dark hall with a
+/* The Gallery: client work on slim backlit panels around a dark hall with a
    polished stone floor that holds their reflections. Live Sarmadax products
    stand between them on stone plinths: a glowing screen and a phone floating
    over a pulsing brass ring. Drag to turn, tap to open. */
@@ -113,7 +113,6 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
   }
   scene.add(cols);
 
-  const brass = new THREE.MeshStandardMaterial({ color: 0xc89a4c, metalness: 1, roughness: 0.3, envMapIntensity: 1.2 });
   const loader = new THREE.TextureLoader();
   const glow = glowTexture();
   interface Frame {
@@ -127,6 +126,7 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
     phone?: THREE.Group;
     slab?: THREE.Group;
     ring?: THREE.MeshStandardMaterial;
+    back?: THREE.MeshBasicMaterial;
   }
   const frames: Frame[] = [];
   const pics: THREE.Mesh[] = [];
@@ -149,6 +149,8 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
       mat.map = tex;
       mat.needsUpdate = true;
     });
+  const bezel = new THREE.MeshStandardMaterial({ color: 0x0e0c14, metalness: 0.35, roughness: 0.45, envMapIntensity: 1 });
+  const hairline = new THREE.MeshBasicMaterial({ color: new THREE.Color(0xe8c48a).multiplyScalar(0.6) });
   const screenMat = () => new THREE.MeshBasicMaterial({ color: 0x15131f });
   const glass = new THREE.MeshStandardMaterial({ color: 0x0b0a10, metalness: 0.7, roughness: 0.22, envMapIntensity: 1.4 });
   const plinthM = stoneMaterial(0x2e251c, { course: 0.45, roughness: 0.55 });
@@ -203,16 +205,23 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
       g.add(plinth, band);
       Object.assign(fr, { phone, slab, ring });
     } else {
+      /* a slim dark panel floating off the dark, a gold hairline round the
+         picture, and a warm light behind it rather than a heavy frame */
       const picM = screenMat();
       loadInto(ex.img, picM, W, H);
-      const frame = new THREE.Mesh(new THREE.BoxGeometry(W + 0.42, H + 0.42, 0.16), brass);
-      const lip = new THREE.Mesh(new THREE.BoxGeometry(W + 0.12, H + 0.12, 0.17), new THREE.MeshStandardMaterial({ color: 0x0a0910, roughness: 0.9 }));
+      const panel = new THREE.Mesh(new RoundedBoxGeometry(W + 0.26, H + 0.26, 0.1, 3, 0.05), bezel);
+      const line = new THREE.Mesh(new THREE.PlaneGeometry(W + 0.028, H + 0.028), hairline);
+      line.position.z = 0.051;
       const pic = new THREE.Mesh(new THREE.PlaneGeometry(W, H), picM);
-      pic.position.z = 0.09;
+      pic.position.z = 0.053;
       pic.userData = { index: i };
-      g.add(frame, lip, pic);
+      const backM = new THREE.MeshBasicMaterial({ map: glow, color: new THREE.Color(0xffb46a), transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, depthWrite: false });
+      const back = new THREE.Mesh(new THREE.PlaneGeometry(W * 1.9, H * 2.1), backM);
+      back.position.z = -0.12;
+      g.add(back, panel, line, pic);
       pics.push(pic);
       screens.push(picM);
+      fr.back = backM;
     }
 
     const shaft = shaftMaterial(0xffd9a0, 0.4);
@@ -272,9 +281,9 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
     vig: 0.48,
     grain: 0.04,
     ca: 0.01,
-    bloom: 0.55,
-    bloomRadius: 0.6,
-    bloomThreshold: 0.95,
+    bloom: 0.6,
+    bloomRadius: 0.65,
+    bloomThreshold: 1.3,
   };
 
   const update = (t: number, dt: number) => {
@@ -299,9 +308,11 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
     }
     frames.forEach((fr, i) => {
       fr.k = damp(fr.k, i === focus ? 1 : 0.34, 4, dt);
-      for (const m of fr.screens) m.color.setScalar(fr.k);
-      fr.shaft.uniforms.intensity.value = 0.04 + fr.k * 0.16;
-      fr.pool.opacity = 0.12 + fr.k * 0.5;
+      /* screenshots stay below the bloom threshold, so white pages never glare */
+      for (const m of fr.screens) m.color.setScalar(fr.k * 0.8);
+      fr.shaft.uniforms.intensity.value = 0.015 + fr.k * 0.06;
+      fr.pool.opacity = 0.08 + fr.k * 0.3;
+      if (fr.back) fr.back.opacity = 0.06 + fr.k * 0.26;
       const push = (fr.k - 0.34) * 0.5;
       fr.g.position.set(Math.sin(fr.a) * (R - push), Y, -Math.cos(fr.a) * (R - push));
       if (fr.phone && fr.slab && fr.ring) {
@@ -337,7 +348,7 @@ export function buildGallery(renderer: THREE.WebGLRenderer, sound: Sound, exhibi
     hover: (ray) => !!hit(ray),
     drag: (dx) => {
       dragging = true;
-      yawT -= dx * 0.006;
+      yawT += dx * 0.006;
     },
     dragEnd: () => {
       dragging = false;

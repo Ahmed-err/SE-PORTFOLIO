@@ -287,8 +287,9 @@ export function buildSky(sound: Sound, count: number, cb: EngineCallbacks, state
     },
     hover: (ray) => !!hit(ray),
     drag: (dx, dy) => {
-      yawT = Math.max(-1.5, Math.min(1.5, yawT - dx * 0.004));
-      pitchT = Math.max(0.05, Math.min(1.05, pitchT + dy * 0.004));
+      /* the view follows the hand: drag right to look right, up to look up */
+      yawT = Math.max(-1.5, Math.min(1.5, yawT + dx * 0.004));
+      pitchT = Math.max(0.05, Math.min(1.05, pitchT - dy * 0.004));
     },
     dragEnd: () => {},
     enter: () => {

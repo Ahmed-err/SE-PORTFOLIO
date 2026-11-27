@@ -528,18 +528,22 @@ export function buildMajlis(renderer: THREE.WebGLRenderer, state: WorldState) {
     const intro = state.calm ? 0 : Math.pow(1 - sstep(0, 2.6, t - enterAt), 2);
     ox = damp(ox, (state.mx - 0.5) * 0.5, 2.4, dt);
     const a = 0.35 + Math.sin(t * 0.13) * 0.28 + ox - intro * 0.5;
-    const r = (state.portrait ? 8.6 : 7.2) + intro * 5;
-    cam.position.set(Math.sin(a) * r, (state.portrait ? 2.6 : 2.2) + intro * 2.2, Math.cos(a) * r);
-    look.set(0, state.portrait ? -1.1 : 0.7, 0);
+    /* on a phone the camera steps back until the whole majlis fits the width */
+    const fit = state.portrait ? Math.min(15, 6.4 / Math.max(0.3, cam.aspect)) : 7.2;
+    const r = fit + intro * 5;
+    cam.position.set(Math.sin(a) * r, (state.portrait ? 2.4 + (fit - 7.2) * 0.22 : 2.2) + intro * 2.2, Math.cos(a) * r);
+    look.set(0, state.portrait ? 0.5 : 0.7, 0);
     cam.lookAt(look);
-    /* on wide screens the form sits to one side; centre the setting in what is left */
+    /* the form covers part of the screen: centre the setting in what is left,
+       beside it on wide screens and above it on phones */
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const shift = vw >= 900 ? (document.documentElement.dir === "rtl" ? -1 : 1) * 214 : 0;
-    const key = shift ? vw + "x" + vh + ":" + shift : "";
+    const lift = vw < 900 ? Math.round(vh * 0.24) : 0;
+    const key = shift || lift ? vw + "x" + vh + ":" + shift + ":" + lift : "";
     if (key !== viewKey) {
       viewKey = key;
-      if (shift) cam.setViewOffset(vw, vh, shift, 0, vw, vh);
+      if (shift || lift) cam.setViewOffset(vw, vh, shift, lift, vw, vh);
       else cam.clearViewOffset();
     }
     const flick = Math.sin(t * 9) * 0.6 + Math.sin(t * 23.7) * 0.4 + Math.sin(t * 3.1) * 0.5;
