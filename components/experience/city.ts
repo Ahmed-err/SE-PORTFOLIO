@@ -141,48 +141,73 @@ export function makeTraffic(lanes: { a: THREE.Vector3; b: THREE.Vector3; count: 
 
 /* ------------------------------------------------------------ landmarks */
 
-/* Corinthia Hotel: an oval glass tower with a roof that slopes like a sail,
-   white floor bands, and a crown of light that drifts through blues at night */
+/* Corinthia Hotel, the "egg" on the Nile: an oval plan, walls that rise almost
+   straight and then round over into a domed crown, dark blue glass ringed by
+   pale floor lines. At night vertical lines of light run up the shell and
+   drift slowly through colours, as on the real building. */
 export function makeCorinthia(lights: CityLights) {
   const group = new THREE.Group();
-  const H = 36;
-  const RX = 9;
-  const RZ = 5.2;
-  const roof = (x: number) => H - ((x + RX) / (2 * RX)) * 9;
-  const g = new THREE.CylinderGeometry(1, 1, 1, 64, 24);
+  const H = 46;
+  const RX = 11;
+  const RZ = 6.6;
+  const prof = (t: number) => Math.pow(Math.max(0, 1 - Math.pow(Math.min(1, t), 3.2)), 0.42);
+  const g = new THREE.CylinderGeometry(1, 1, 1, 80, 44);
   g.translate(0, 0.5, 0);
   const p = g.attributes.position;
   for (let i = 0; i < p.count; i++) {
-    const x = p.getX(i) * RX;
-    const z = p.getZ(i) * RZ;
-    p.setXYZ(i, x, p.getY(i) * roof(x), z);
+    const t = p.getY(i);
+    const f = prof(t);
+    p.setXYZ(i, p.getX(i) * RX * f, t * H, p.getZ(i) * RZ * f);
   }
   g.computeVertexNormals();
-  group.add(new THREE.Mesh(g, towerMaterial(0x2f6f80, lights, 0.95, 1.8)));
-  const white = new THREE.MeshStandardMaterial({ color: 0xeeeae2, roughness: 0.5 });
-  for (let y = 3; y < H - 9; y += 3.2) {
-    const ring = new THREE.Mesh(new THREE.CylinderGeometry(1.012, 1.012, 0.22, 64, 1, true), white);
-    ring.scale.set(RX, 1, RZ);
+  const glass = towerMaterial(0x1f4a66, lights, 1.15, 2.2);
+  glass.roughness = 0.16;
+  glass.metalness = 0.7;
+  glass.envMapIntensity = 1.4;
+  group.add(new THREE.Mesh(g, glass));
+
+  /* pale floor lines that follow the curve */
+  const white = new THREE.MeshStandardMaterial({ color: 0xe9e2d4, roughness: 0.45, metalness: 0.2 });
+  for (let y = 4; y < H - 3; y += 2.6) {
+    const f = prof(y / H) * 1.006;
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.14, 80, 1, true), white);
+    ring.scale.set(RX * f, 1, RZ * f);
     ring.position.y = y;
     group.add(ring);
   }
-  /* the base podium */
-  const pod = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 3, 48), white);
-  pod.scale.set(RX + 3, 1, RZ + 2.5);
-  pod.position.y = 1.5;
+  /* the podium it stands on */
+  const pod = new THREE.Mesh(new THREE.CylinderGeometry(1, 1.04, 3.2, 64), white);
+  pod.scale.set(RX + 4, 1, RZ + 3.2);
+  pod.position.y = 1.6;
   group.add(pod);
+
+  /* night: light lines up the meridians, and a halo round the crown */
+  const sp: number[] = [];
+  const M = 30;
+  for (let m = 0; m < M; m++) {
+    const a = (m / M) * Math.PI * 2;
+    for (let t = 0.1; t < 0.97; t += 0.028) {
+      const f = prof(t) * 1.012;
+      sp.push(Math.cos(a) * RX * f, t * H, Math.sin(a) * RZ * f);
+    }
+  }
+  const strips = softPoints({ positions: sp, size: 0.42, color: 0x7fb4ff, intensity: 1.6, attenuate: true });
+  group.add(strips.points);
   const cp: number[] = [];
   for (let i = 0; i < 90; i++) {
     const a = (i / 90) * Math.PI * 2;
-    const x = Math.cos(a) * RX * 1.01;
-    cp.push(x, roof(x) + 0.15, Math.sin(a) * RZ * 1.01);
+    const f = prof(0.9) * 1.02;
+    cp.push(Math.cos(a) * RX * f, H * 0.9, Math.sin(a) * RZ * f);
   }
-  const crown = softPoints({ positions: cp, size: 0.75, color: 0x7fb4ff, intensity: 2.6, attenuate: true });
+  const crown = softPoints({ positions: cp, size: 0.7, color: 0x7fb4ff, intensity: 2.6, attenuate: true });
   group.add(crown.points);
   const hue = new THREE.Color();
   const update = (t: number) => {
-    hue.setHSL(0.58 + Math.sin(t * 0.15) * 0.08, 0.8, 0.62);
+    const night = Math.min(1, Math.max(0, (lights.litFrac.value - 0.2) / 0.42));
+    hue.setHSL((0.55 + t * 0.012) % 1, 0.75, 0.6);
     crown.uniforms.color.value.copy(hue);
+    strips.uniforms.color.value.copy(hue);
+    strips.uniforms.opacity.value = 0.15 + night * 0.85;
   };
   return { mesh: group, crown, update };
 }

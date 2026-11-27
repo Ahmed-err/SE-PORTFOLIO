@@ -238,6 +238,7 @@ export function makeWater(o: WaterOptions) {
         float h = vnoise(p * vec2(0.32, 0.11) + vec2(0.0, t * 0.22)) * 0.6;
         h += vnoise(p * vec2(0.9, 0.42) - vec2(t * 0.12, t * 0.5)) * 0.3;
         h += vnoise(p * vec2(2.4, 1.3) + vec2(t * 0.3, -t * 0.9)) * 0.12;
+        h += vnoise(p * vec2(6.5, 3.8) + vec2(-t * 0.6, t * 1.4)) * 0.04;
         return h;
       }
       void main(){
@@ -247,13 +248,21 @@ export function makeWater(o: WaterOptions) {
         vec2 p = vW.xz;
         float e = 0.12;
         float h0 = H(p);
-        float s = mix(0.55, 0.12, smoothstep(12.0, 140.0, dist));
+        /* a calm river: gentle near, almost glassy toward the horizon */
+        float s = mix(0.3, 0.05, smoothstep(10.0, 150.0, dist));
         vec3 n = normalize(vec3((h0 - H(p + vec2(e, 0.0))) / e * s, 1.0, (h0 - H(p + vec2(0.0, e))) / e * s));
         float ndv = max(dot(n, V), 0.0);
-        float fres = 0.04 + 0.96 * pow(1.0 - ndv, 5.0);
-        vec2 uv = vUv4.xy / vUv4.w + n.xz * 0.05;
-        vec3 refl = texture2D(tDiffuse, uv).rgb * reflI;
-        vec3 body = deep * (0.7 + 0.6 * h0) + tint * pow(1.0 - ndv, 2.0) * 0.12;
+        float fres = 0.02 + 0.98 * pow(1.0 - ndv, 5.0);
+        /* reflections smear along the line of sight, the way lamps and the sun
+           stretch into long columns on moving water */
+        vec2 uv = vUv4.xy / vUv4.w + vec2(n.x * 0.014, n.z * 0.03);
+        float sm = mix(0.004, 0.011, smoothstep(8.0, 90.0, dist));
+        vec3 refl = (texture2D(tDiffuse, uv).rgb * 0.36
+          + texture2D(tDiffuse, uv + vec2(0.0, sm)).rgb * 0.24
+          + texture2D(tDiffuse, uv - vec2(0.0, sm)).rgb * 0.24
+          + texture2D(tDiffuse, uv + vec2(0.0, sm * 2.4)).rgb * 0.16) * reflI;
+        /* looking straight down you see into the water, darker and deeper */
+        vec3 body = deep * (0.55 + 0.5 * h0) * mix(0.7, 1.15, 1.0 - ndv) + tint * pow(1.0 - ndv, 2.0) * 0.16;
         /* al-Mogran: the dark Blue Nile and the pale White Nile run side by side */
         float mog = 0.0;
         if (shoreOn > 0.5) {
@@ -265,7 +274,7 @@ export function makeWater(o: WaterOptions) {
           float swirl = smoothstep(0.35, 0.0, abs(seam)) * vnoise(p * 0.9 + uTime * 0.2);
           body = mix(body, mix(nw, nb, blue) * (1.0 - dim * 0.8) + nw * swirl * 0.25, mog * 0.9);
         }
-        vec3 col = mix(body, refl, clamp(fres + 0.32 - mog * 0.2, 0.0, 1.0));
+        vec3 col = mix(body, refl, clamp(fres * 0.92 + 0.14 - mog * 0.15, 0.0, 1.0));
         /* sun glitter: a broad sheen and needle-sharp glints that bloom */
         vec3 R = reflect(-V, n);
         float sd = max(dot(R, sunDir), 0.0);

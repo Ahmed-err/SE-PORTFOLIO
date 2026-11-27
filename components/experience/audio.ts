@@ -83,10 +83,10 @@ export class Sound {
        slowly breathing low-pass */
     const lp = ctx.createBiquadFilter();
     lp.type = "lowpass";
-    lp.frequency.value = 520;
+    lp.frequency.value = 430;
     lp.Q.value = 0.5;
     const padG = ctx.createGain();
-    padG.gain.value = 0.045;
+    padG.gain.value = 0.032;
     lp.connect(padG);
     this.send(padG, 0.8, 0.5);
     const lfo = this.osc(0.045, "sine");
@@ -103,7 +103,7 @@ export class Sound {
     for (const r of [1, 1.5, 2, 3]) {
       for (const [type, det, v] of [
         ["triangle", -6, 1],
-        ["sawtooth", 7, 0.22],
+        ["sawtooth", 7, 0.07],
       ] as const) {
         const o = ctx.createOscillator();
         o.type = type;
@@ -144,6 +144,21 @@ export class Sound {
       const p = ctx.createStereoPanner();
       p.pan.value = pan;
       src.connect(f).connect(f2).connect(g).connect(p).connect(water);
+    }
+    /* and a thin trickle on top, the sound of moving water rather than rumble */
+    {
+      const src = this.loopNoise();
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.value = 2300;
+      bp.Q.value = 0.7;
+      const g = ctx.createGain();
+      g.gain.value = 0.009;
+      const l = this.osc(0.31, "sine");
+      const lg = ctx.createGain();
+      lg.gain.value = 0.005;
+      l.connect(lg).connect(g.gain);
+      src.connect(bp).connect(g).connect(water);
     }
 
     /* wind: a band of noise that wanders in pitch and strength */
@@ -577,6 +592,11 @@ export class Sound {
     if (this.place === "majlis") {
       for (let i = 0; i < 3; i++) if (Math.random() < 0.28) this.crackle(now + Math.random() * 0.2);
     }
+    /* life on the banks: birds while there is light, a fish or a drip now and then */
+    if (this.place === "river") {
+      if (Math.random() < 0.022 * (1 - this.tod)) this.bird(now + Math.random() * 0.3, (Math.random() - 0.5) * 1.6);
+      if (Math.random() < 0.012) this.drop((Math.random() - 0.5) * 1.2);
+    }
     if (now < this.nextPhrase) return;
     const p = this.place;
     const gap: Record<Place, [number, number]> = { river: [6, 12], gallery: [8, 15], sky: [4, 9], majlis: [4, 9] };
@@ -593,6 +613,35 @@ export class Sound {
       deg += [-2, -1, -1, 1, 1, 2][Math.floor(Math.random() * 6)];
       deg = Math.max(0, Math.min(9, deg));
       at += 0.2 + Math.random() * (p === "majlis" ? 0.25 : 0.45);
+    }
+  }
+
+  /* a small bird: two to four quick rising-and-falling whistles */
+  private bird(at: number, pan: number) {
+    const ctx = this.ctx!;
+    const base = 2600 + Math.random() * 1600;
+    const notes = 2 + Math.floor(Math.random() * 3);
+    const p = ctx.createStereoPanner();
+    p.pan.value = pan;
+    const out = ctx.createGain();
+    out.gain.value = 0.016 + Math.random() * 0.01;
+    out.connect(p);
+    this.send(p, 0.7, 0.45);
+    for (let i = 0; i < notes; i++) {
+      const t = at + i * (0.09 + Math.random() * 0.06);
+      const o = ctx.createOscillator();
+      o.type = "sine";
+      const f = base * (1 + (Math.random() - 0.5) * 0.18);
+      o.frequency.setValueAtTime(f * 0.82, t);
+      o.frequency.exponentialRampToValueAtTime(f * 1.18, t + 0.035);
+      o.frequency.exponentialRampToValueAtTime(f * 0.9, t + 0.075);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(1, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      o.connect(g).connect(out);
+      o.start(t);
+      o.stop(t + 0.1);
     }
   }
 

@@ -459,7 +459,7 @@ export function buildRiver(sound: Sound, state: WorldState) {
     const dx = (z > -300 ? 30 : 24) + rnd() * rnd() * 120;
     const x = pathX(z) + side * dx;
     if (Math.abs(z - BRIDGE_Z) < 7 && dx < 52) continue;
-    if (Math.abs(z - SAIL_Z) < 16 && side > 0 && dx < 48) continue;
+    if (Math.abs(z - SAIL_Z) < 26 && side > 0 && dx < 56) continue;
     if (Math.abs(z - MOSQUE_Z) < 16 && side < 0 && dx < 50) continue;
     if (Math.abs(z - MAHDI_Z) < 12 && side < 0 && dx < 46) continue;
     const core = Math.max(0, 1 - Math.abs(z + 330) / 150) * Math.max(0, 1 - dx / 150);
@@ -476,8 +476,9 @@ export function buildRiver(sound: Sound, state: WorldState) {
   const towers = makeTowers(towerSpots, cityU, rnd);
   scene.add(towers.mesh, towers.aviation.points);
   const sail = makeCorinthia(cityU);
-  sail.mesh.position.set(pathX(SAIL_Z) + 27, CITY_Y - 0.3, SAIL_Z);
-  sail.mesh.rotation.y = 1.25;
+  /* broad face to the river, standing clear of the towers around it */
+  sail.mesh.position.set(pathX(SAIL_Z) + 30, CITY_Y - 0.3, SAIL_Z);
+  sail.mesh.rotation.y = -0.35;
   scene.add(sail.mesh);
   const mosque = makeNilin();
   mosque.group.position.set(pathX(MOSQUE_Z) - 34, CITY_Y - 0.2, MOSQUE_Z);
